@@ -18,5 +18,25 @@
     <ClInclude Include="library1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="generic_avl_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="companies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="employees_id.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="employees_salary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="active_companies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

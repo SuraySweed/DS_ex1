@@ -1,0 +1,4 @@
+#ifndef ACTIVE_COMPANIES_H
+#define ACTIVE_COMPANIES_H
+
+#endif //ACTIVE_COMPANIES_H_
