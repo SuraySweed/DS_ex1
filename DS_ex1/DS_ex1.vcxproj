@@ -149,6 +149,7 @@
     <ClInclude Include="library1.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AVLTests.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
