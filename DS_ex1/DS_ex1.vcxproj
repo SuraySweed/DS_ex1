@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="active_companies.h" />
+    <ClInclude Include="avl_tree.h" />
     <ClInclude Include="companies.h" />
     <ClInclude Include="employees_id.h" />
     <ClInclude Include="employees_salary.h" />

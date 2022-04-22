@@ -5,7 +5,7 @@
  *      Author: shirel
  */
 
-#include "AVL_GENERIC.h"
+#include "avl_tree.h"
 #include <vector>
 #include <ostream>
 #include <random>
@@ -14,11 +14,10 @@
 #include <iostream>
 
 
-using namespace DataStruct;
 using namespace std;
 
 int main() {
-	AVL<int, int> tree;
+	AVLTree<int> tree;
 
 	//Specific Cases
 
@@ -28,477 +27,487 @@ int main() {
 	3 BF: 0 Height: 0 */
 
 	//basic LL root change
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(1, 1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	int num1 = 3;
+	tree.insert(3);
+	//tree.insert(2);
+	//tree.insert(1);
+	//tree.insert(0);
+	//tree.insert(-1);
+	
+	//tree.printTree();
+	tree.remove(3);
+	//tree.remove(0);
+	//tree.remove(1);
+	tree.insert(7);
 
 	cout << endl;
+	
 
-	//basic LR root change
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(2, 2);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
 
-	//basic RR root change
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(3, 3);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic LR root change
+	//tree.insert(3, 3);
+	//tree.insert(1, 1);
+	//tree.insert(2, 2);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//basic RL root change
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic RR root change
+	//tree.insert(1, 1);
+	//tree.insert(2, 2);
+	//tree.insert(3, 3);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//basic LR not root change
-	/*correct output
-	1 BF: 0 Height: 0
-	2 BF: 0 Height: 1
-	3 BF: 0 Height: 0
-	4 BF: 1 Height: 2
-	5 BF: 0 Height: 0
-	6 BF: 1 Height: 3
-	7 BF: 0 Height: 0
-	8 BF: 1 Height: 1 */
-	tree.AVLInsert(6, 6);
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(2, 2);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic RL root change
+	//tree.insert(1, 1);
+	//tree.insert(3, 3);
+	//tree.insert(2, 2);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	/*basic LL not root change
-	correct output
-	1 BF: 0 Height: 0
-	2 BF: 0 Height: 1
-	3 BF: 0 Height: 0
-	4 BF: 1 Height: 2
-	5 BF: 0 Height: 0
-	6 BF: 1 Height: 3
-	7 BF: 0 Height: 0
-	8 BF: 1 Height: 1 */
-	tree.AVLInsert(6, 6);
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(1, 1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic LR not root change
+	///*correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 0 Height: 1
+	//3 BF: 0 Height: 0
+	//4 BF: 1 Height: 2
+	//5 BF: 0 Height: 0
+	//6 BF: 1 Height: 3
+	//7 BF: 0 Height: 0
+	//8 BF: 1 Height: 1 */
+	//tree.insert(6, 6);
+	//tree.insert(4, 4);
+	//tree.insert(8, 8);
+	//tree.insert(3, 3);
+	//tree.insert(5, 5);
+	//tree.insert(7, 7);
+	//tree.insert(1, 1);
+	//tree.insert(2, 2);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//basic RR not root change
-	/*correct output
-	 * 1 BF: 0 Height: 0
-	2 BF: 0 Height: 1
-	3 BF: 0 Height: 0
-	5 BF: 1 Height: 2
-	7 BF: 0 Height: 0*/
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(3, 3);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	///*basic LL not root change
+	//correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 0 Height: 1
+	//3 BF: 0 Height: 0
+	//4 BF: 1 Height: 2
+	//5 BF: 0 Height: 0
+	//6 BF: 1 Height: 3
+	//7 BF: 0 Height: 0
+	//8 BF: 1 Height: 1 */
+	//tree.insert(6, 6);
+	//tree.insert(4, 4);
+	//tree.insert(8, 8);
+	//tree.insert(3, 3);
+	//tree.insert(5, 5);
+	//tree.insert(7, 7);
+	//tree.insert(2, 2);
+	//tree.insert(1, 1);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//basic RL not root change
-	/*correct output
-	 * 1 BF: 0 Height: 0
-	2 BF: 0 Height: 1
-	3 BF: 0 Height: 0
-	5 BF: 1 Height: 2
-	7 BF: 0 Height: 0*/
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic RR not root change
+	///*correct output
+	// * 1 BF: 0 Height: 0
+	//2 BF: 0 Height: 1
+	//3 BF: 0 Height: 0
+	//5 BF: 1 Height: 2
+	//7 BF: 0 Height: 0*/
+	//tree.insert(5, 5);
+	//tree.insert(7, 7);
+	//tree.insert(1, 1);
+	//tree.insert(2, 2);
+	//tree.insert(3, 3);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//root deletion no roll successor is a neighbour
-	/*correct output
-	2 BF: 0 Height: 0
-	3 BF: 1 Height: 1
-	5 BF: 1 Height: 2
-	6 BF: 0 Height: 0*/
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(6, 6);
-	tree.AVLRemove(4);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////basic RL not root change
+	///*correct output
+	// * 1 BF: 0 Height: 0
+	//2 BF: 0 Height: 1
+	//3 BF: 0 Height: 0
+	//5 BF: 1 Height: 2
+	//7 BF: 0 Height: 0*/
+	//tree.insert(5, 5);
+	//tree.insert(7, 7);
+	//tree.insert(1, 1);
+	//tree.insert(3, 3);
+	//tree.insert(2, 2);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//root deletion no roll successor is not a neighbour
-	/*correct output
-	2 BF: 0 Height: 0
-	3 BF: 1 Height: 1
-	5 BF: 0 Height: 2
-	6 BF: 0 Height: 0
-	7 BF: 0 Height: 1
-	8 BF: 0 Height: 0 */
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(6, 6);
-	tree.AVLRemove(4);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////root deletion no roll successor is a neighbour
+	///*correct output
+	//2 BF: 0 Height: 0
+	//3 BF: 1 Height: 1
+	//5 BF: 1 Height: 2
+	//6 BF: 0 Height: 0*/
+	//tree.insert(4, 4);
+	//tree.insert(5, 5);
+	//tree.insert(3, 3);
+	//tree.insert(2, 2);
+	//tree.insert(6, 6);
+	//tree.AVLRemove(4);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion no roll successor is a neighbour case7
-	/*correct output
-	1 BF: 0 Height: 0
-	2 BF: 1 Height: 1
-	4 BF: 1 Height: 2
-	5 BF: 0 Height: 0
-	7 BF: 1 Height: 3
-	8 BF: -1 Height: 1
-	9 BF: 0 Height: 0*/
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(1, 1);
-	tree.AVLRemove(3);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////root deletion no roll successor is not a neighbour
+	///*correct output
+	//2 BF: 0 Height: 0
+	//3 BF: 1 Height: 1
+	//5 BF: 0 Height: 2
+	//6 BF: 0 Height: 0
+	//7 BF: 0 Height: 1
+	//8 BF: 0 Height: 0 */
+	//tree.insert(4, 4);
+	//tree.insert(3, 3);
+	//tree.insert(7, 7);
+	//tree.insert(2, 2);
+	//tree.insert(5, 5);
+	//tree.insert(8, 8);
+	//tree.insert(6, 6);
+	//tree.AVLRemove(4);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion no roll successor is not a neighbour case8
-	/*correct output
-	1 BF: 0 Height: 0
-	2 BF: 1 Height: 1
-	5 BF: 0 Height: 2
-	6 BF: 0 Height: 0
-	7 BF: 0 Height: 1
-	8 BF: 0 Height: 0
-	9 BF: 0 Height: 3
-	10 BF: 0 Height: 0
-	12 BF: -1 Height: 2
-	13 BF: -1 Height: 1
-	14 BF: 0 Height: 0*/
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(12, 12);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(10, 10);
-	tree.AVLInsert(13, 13);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(14, 14);
-	tree.AVLInsert(6, 6);
-	tree.AVLRemove(3);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion no roll successor is a neighbour case7
+	///*correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 1 Height: 1
+	//4 BF: 1 Height: 2
+	//5 BF: 0 Height: 0
+	//7 BF: 1 Height: 3
+	//8 BF: -1 Height: 1
+	//9 BF: 0 Height: 0*/
+	//tree.insert(7, 7);
+	//tree.insert(3, 3);
+	//tree.insert(8, 8);
+	//tree.insert(2, 2);
+	//tree.insert(4, 4);
+	//tree.insert(9, 9);
+	//tree.insert(5, 5);
+	//tree.insert(1, 1);
+	//tree.AVLRemove(3);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion causing LR case9
-	/*correct output
-	1 BF: 0 Height: 0
-	2 BF: 0 Height: 1
-	3 BF: 0 Height: 0
-	4 BF: 0 Height: 2
-	7 BF: -1 Height: 1
-	8 BF: 0 Height: 0*/
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(3, 3);
-	tree.AVLRemove(9);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion no roll successor is not a neighbour case8
+	///*correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 1 Height: 1
+	//5 BF: 0 Height: 2
+	//6 BF: 0 Height: 0
+	//7 BF: 0 Height: 1
+	//8 BF: 0 Height: 0
+	//9 BF: 0 Height: 3
+	//10 BF: 0 Height: 0
+	//12 BF: -1 Height: 2
+	//13 BF: -1 Height: 1
+	//14 BF: 0 Height: 0*/
+	//tree.insert(9, 9);
+	//tree.insert(3, 3);
+	//tree.insert(12, 12);
+	//tree.insert(2, 2);
+	//tree.insert(7, 7);
+	//tree.insert(10, 10);
+	//tree.insert(13, 13);
+	//tree.insert(1, 1);
+	//tree.insert(5, 5);
+	//tree.insert(8, 8);
+	//tree.insert(14, 14);
+	//tree.insert(6, 6);
+	//tree.AVLRemove(3);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion causing LL case10
-	/*correct output
-	1 BF: 0 Height: 0
-	2 BF: 1 Height: 1
-	3 BF: 0 Height: 2
-	4 BF: 0 Height: 0
-	7 BF: 0 Height: 1
-	8 BF: 0 Height: 0*/
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(4, 4);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(1, 1);
-	tree.AVLRemove(9);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion causing LR case9
+	///*correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 0 Height: 1
+	//3 BF: 0 Height: 0
+	//4 BF: 0 Height: 2
+	//7 BF: -1 Height: 1
+	//8 BF: 0 Height: 0*/
+	//tree.insert(7, 7);
+	//tree.insert(2, 2);
+	//tree.insert(8, 8);
+	//tree.insert(1, 1);
+	//tree.insert(4, 4);
+	//tree.insert(9, 9);
+	//tree.insert(3, 3);
+	//tree.AVLRemove(9);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion causing RR case11
-	/*correct output
-	2 BF: 0 Height: 0
-	3 BF: 0 Height: 1
-	7 BF: 0 Height: 0
-	8 BF: 0 Height: 2
-	9 BF: -1 Height: 1
-	10 BF: 0 Height: 0*/
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(10, 10);
-	tree.AVLRemove(1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion causing LL case10
+	///*correct output
+	//1 BF: 0 Height: 0
+	//2 BF: 1 Height: 1
+	//3 BF: 0 Height: 2
+	//4 BF: 0 Height: 0
+	//7 BF: 0 Height: 1
+	//8 BF: 0 Height: 0*/
+	//tree.insert(7, 7);
+	//tree.insert(3, 3);
+	//tree.insert(8, 8);
+	//tree.insert(2, 2);
+	//tree.insert(4, 4);
+	//tree.insert(9, 9);
+	//tree.insert(1, 1);
+	//tree.AVLRemove(9);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//node deletion causing RL case12
-	/*correct output
-	* 2 BF: 0 Height: 0
-	3 BF: 1 Height: 1
-	7 BF: 0 Height: 2
-	10 BF: 0 Height: 0
-	13 BF: 0 Height: 1
-	14 BF: 0 Height: 0*/
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(13, 13);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(14, 14);
-	tree.AVLInsert(10, 10);
-	tree.AVLRemove(1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion causing RR case11
+	///*correct output
+	//2 BF: 0 Height: 0
+	//3 BF: 0 Height: 1
+	//7 BF: 0 Height: 0
+	//8 BF: 0 Height: 2
+	//9 BF: -1 Height: 1
+	//10 BF: 0 Height: 0*/
+	//tree.insert(3, 3);
+	//tree.insert(2, 2);
+	//tree.insert(8, 8);
+	//tree.insert(7, 7);
+	//tree.insert(1, 1);
+	//tree.insert(9, 9);
+	//tree.insert(10, 10);
+	//tree.AVLRemove(1);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//double rotations RL and RR case 13
-	/*correct output
-	3 BF: 0 Height: 0
-	5 BF: 0 Height: 1
-	7 BF: 0 Height: 0
-	9 BF: 0 Height: 2
-	11 BF: 0 Height: 0
-	13 BF: 1 Height: 1
-	15 BF: 0 Height: 3
-	17 BF: 0 Height: 0
-	19 BF: -1 Height: 2
-	21 BF: -1 Height: 1
-	23 BF: 0 Height: 0*/
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(15, 15);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(13, 13);
-	tree.AVLInsert(19, 19);
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(11, 11);
-	tree.AVLInsert(17, 17);
-	tree.AVLInsert(21, 21);
-	tree.AVLInsert(23, 23);
-	tree.AVLRemove(1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////node deletion causing RL case12
+	///*correct output
+	//* 2 BF: 0 Height: 0
+	//3 BF: 1 Height: 1
+	//7 BF: 0 Height: 2
+	//10 BF: 0 Height: 0
+	//13 BF: 0 Height: 1
+	//14 BF: 0 Height: 0*/
+	//tree.insert(3, 3);
+	//tree.insert(2, 2);
+	//tree.insert(13, 13);
+	//tree.insert(7, 7);
+	//tree.insert(1, 1);
+	//tree.insert(14, 14);
+	//tree.insert(10, 10);
+	//tree.AVLRemove(1);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//double rotations RR and RR case 14
-	/*correct output
-	3 BF: 0 Height: 0
-	7 BF: 0 Height: 1
-	8 BF: 0 Height: 0
-	9 BF: 0 Height: 2
-	11 BF: 0 Height: 0
-	13 BF: 1 Height: 1
-	15 BF: 0 Height: 3
-	17 BF: 0 Height: 0
-	19 BF: -1 Height: 2
-	21 BF: -1 Height: 1
-	23 BF: 0 Height: 0*/
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(15, 15);
-	tree.AVLInsert(1, 1);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(13, 13);
-	tree.AVLInsert(19, 19);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(11, 11);
-	tree.AVLInsert(17, 17);
-	tree.AVLInsert(21, 21);
-	tree.AVLInsert(23, 23);
-	tree.AVLRemove(1);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////double rotations RL and RR case 13
+	///*correct output
+	//3 BF: 0 Height: 0
+	//5 BF: 0 Height: 1
+	//7 BF: 0 Height: 0
+	//9 BF: 0 Height: 2
+	//11 BF: 0 Height: 0
+	//13 BF: 1 Height: 1
+	//15 BF: 0 Height: 3
+	//17 BF: 0 Height: 0
+	//19 BF: -1 Height: 2
+	//21 BF: -1 Height: 1
+	//23 BF: 0 Height: 0*/
+	//tree.insert(9, 9);
+	//tree.insert(3, 3);
+	//tree.insert(15, 15);
+	//tree.insert(1, 1);
+	//tree.insert(7, 7);
+	//tree.insert(13, 13);
+	//tree.insert(19, 19);
+	//tree.insert(5, 5);
+	//tree.insert(11, 11);
+	//tree.insert(17, 17);
+	//tree.insert(21, 21);
+	//tree.insert(23, 23);
+	//tree.AVLRemove(1);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//double rotations RL and LL case 15
-	/*correct output
-	6 BF: 0 Height: 0
-	7 BF: 1 Height: 1
-	8 BF: 1 Height: 2
-	9 BF: 0 Height: 0
-	10 BF: 0 Height: 3
-	11 BF: -1 Height: 1
-	12 BF: 0 Height: 0
-	15 BF: 0 Height: 2
-	17 BF: 0 Height: 0
-	18 BF: 0 Height: 1
-	20 BF: 0 Height: 0
-	 */
-	tree.AVLInsert(15, 15);
-	tree.AVLInsert(10, 10);
-	tree.AVLInsert(20, 20);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(11, 11);
-	tree.AVLInsert(17, 17);
-	tree.AVLInsert(21, 21);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(12, 12);
-	tree.AVLInsert(18, 18);
-	tree.AVLInsert(6, 6);
-	tree.AVLRemove(21);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////double rotations RR and RR case 14
+	///*correct output
+	//3 BF: 0 Height: 0
+	//7 BF: 0 Height: 1
+	//8 BF: 0 Height: 0
+	//9 BF: 0 Height: 2
+	//11 BF: 0 Height: 0
+	//13 BF: 1 Height: 1
+	//15 BF: 0 Height: 3
+	//17 BF: 0 Height: 0
+	//19 BF: -1 Height: 2
+	//21 BF: -1 Height: 1
+	//23 BF: 0 Height: 0*/
+	//tree.insert(9, 9);
+	//tree.insert(3, 3);
+	//tree.insert(15, 15);
+	//tree.insert(1, 1);
+	//tree.insert(7, 7);
+	//tree.insert(13, 13);
+	//tree.insert(19, 19);
+	//tree.insert(8, 8);
+	//tree.insert(11, 11);
+	//tree.insert(17, 17);
+	//tree.insert(21, 21);
+	//tree.insert(23, 23);
+	//tree.AVLRemove(1);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//double rotations LR and LL case 16
-	/*correct output
-	6 BF: 0 Height: 0
-	7 BF: 1 Height: 1
-	8 BF: 1 Height: 2
-	9 BF: 0 Height: 0
-	10 BF: 0 Height: 3
-	11 BF: -1 Height: 1
-	12 BF: 0 Height: 0
-	15 BF: 0 Height: 2
-	20 BF: 0 Height: 0
-	21 BF: 0 Height: 1
-	22 BF: 0 Height: 0 */
-	tree.AVLInsert(15, 15);
-	tree.AVLInsert(10, 10);
-	tree.AVLInsert(20, 20);
-	tree.AVLInsert(8, 8);
-	tree.AVLInsert(11, 11);
-	tree.AVLInsert(17, 17);
-	tree.AVLInsert(22, 22);
-	tree.AVLInsert(7, 7);
-	tree.AVLInsert(9, 9);
-	tree.AVLInsert(12, 12);
-	tree.AVLInsert(21, 21);
-	tree.AVLInsert(6, 6);
-	tree.AVLRemove(17);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	////double rotations RL and LL case 15
+	///*correct output
+	//6 BF: 0 Height: 0
+	//7 BF: 1 Height: 1
+	//8 BF: 1 Height: 2
+	//9 BF: 0 Height: 0
+	//10 BF: 0 Height: 3
+	//11 BF: -1 Height: 1
+	//12 BF: 0 Height: 0
+	//15 BF: 0 Height: 2
+	//17 BF: 0 Height: 0
+	//18 BF: 0 Height: 1
+	//20 BF: 0 Height: 0
+	// */
+	//tree.insert(15, 15);
+	//tree.insert(10, 10);
+	//tree.insert(20, 20);
+	//tree.insert(8, 8);
+	//tree.insert(11, 11);
+	//tree.insert(17, 17);
+	//tree.insert(21, 21);
+	//tree.insert(7, 7);
+	//tree.insert(9, 9);
+	//tree.insert(12, 12);
+	//tree.insert(18, 18);
+	//tree.insert(6, 6);
+	//tree.AVLRemove(21);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	//delete node cause LR
-	/*correct output
-	 * 2 BF: 0 Height: 0
-	3 BF: -1 Height: 2
-	4 BF: 0 Height: 0
-	6 BF: 1 Height: 1*/
+	////double rotations LR and LL case 16
+	///*correct output
+	//6 BF: 0 Height: 0
+	//7 BF: 1 Height: 1
+	//8 BF: 1 Height: 2
+	//9 BF: 0 Height: 0
+	//10 BF: 0 Height: 3
+	//11 BF: -1 Height: 1
+	//12 BF: 0 Height: 0
+	//15 BF: 0 Height: 2
+	//20 BF: 0 Height: 0
+	//21 BF: 0 Height: 1
+	//22 BF: 0 Height: 0 */
+	//tree.insert(15, 15);
+	//tree.insert(10, 10);
+	//tree.insert(20, 20);
+	//tree.insert(8, 8);
+	//tree.insert(11, 11);
+	//tree.insert(17, 17);
+	//tree.insert(22, 22);
+	//tree.insert(7, 7);
+	//tree.insert(9, 9);
+	//tree.insert(12, 12);
+	//tree.insert(21, 21);
+	//tree.insert(6, 6);
+	//tree.AVLRemove(17);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(6, 6);
-	tree.AVLInsert(2, 2);
-	tree.AVLInsert(4, 4);
-	tree.AVLRemove(5);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	//cout << endl;
 
-	cout << endl;
+	////delete node cause LR
+	///*correct output
+	// * 2 BF: 0 Height: 0
+	//3 BF: -1 Height: 2
+	//4 BF: 0 Height: 0
+	//6 BF: 1 Height: 1*/
 
-	//delete node cause LR
-	/*correct output
-	 * 2 BF: 0 Height: 0
-	3 BF: 0 Height: 1
-	6 BF: 0 Height: 0*/
-	tree.AVLInsert(5, 5);
-	tree.AVLInsert(3, 3);
-	tree.AVLInsert(6, 6);
-	tree.AVLInsert(2, 2);
-	tree.AVLRemove(5);
-	tree.printTree();
-	tree.TestsRemove(tree.GetRoot());
+	//tree.insert(5, 5);
+	//tree.insert(3, 3);
+	//tree.insert(6, 6);
+	//tree.insert(2, 2);
+	//tree.insert(4, 4);
+	//tree.AVLRemove(5);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	cout << endl;
+	//cout << endl;
 
-	std::vector<int> vector;
-	for (int i = 1; i <= 100; i++) vector.push_back(i);
+	////delete node cause LR
+	///*correct output
+	// * 2 BF: 0 Height: 0
+	//3 BF: 0 Height: 1
+	//6 BF: 0 Height: 0*/
+	//tree.insert(5, 5);
+	//tree.insert(3, 3);
+	//tree.insert(6, 6);
+	//tree.insert(2, 2);
+	//tree.AVLRemove(5);
+	//tree.printTree();
+	//tree.TestsRemove(tree.GetRoot());
 
-	//Randomly insert and removes nodes
-	for (int k = 0; k < 20; ++k) {
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-		shuffle(vector.begin(), vector.end(), std::default_random_engine(seed));
-		for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); ++it) {
-			tree.AVLInsert(*it, *it);
+	//cout << endl;
 
-		}
-		tree.printTree();
-		shuffle(vector.begin(), vector.end(), std::default_random_engine(seed));
-		for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); ++it) {
-			tree.AVLRemove(*it);
-			tree.printTree();
+	//std::vector<int> vector;
+	//for (int i = 1; i <= 100; i++) vector.push_back(i);
 
-		}
-		tree.TestsRemove(tree.GetRoot());
-		tree.printTree();
-		cout << '\n';
-	}
+	////Randomly insert and removes nodes
+	//for (int k = 0; k < 20; ++k) {
+	//	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	//	shuffle(vector.begin(), vector.end(), std::default_random_engine(seed));
+	//	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); ++it) {
+	//		tree.insert(*it, *it);
+
+	//	}
+	//	tree.printTree();
+	//	shuffle(vector.begin(), vector.end(), std::default_random_engine(seed));
+	//	for (std::vector<int>::iterator it = vector.begin(); it != vector.end(); ++it) {
+	//		tree.AVLRemove(*it);
+	//		tree.printTree();
+
+	//	}
+	//	tree.TestsRemove(tree.GetRoot());
+	//	tree.printTree();
+	//	cout << '\n';
+	//}
 
 	return 0;
 }
