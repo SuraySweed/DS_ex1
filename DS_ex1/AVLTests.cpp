@@ -27,18 +27,24 @@ int main() {
 	3 BF: 0 Height: 0 */
 
 	//basic LL root change
-	int num1 = 3;
-	tree.insert(3);
-	//tree.insert(2);
-	//tree.insert(1);
-	//tree.insert(0);
-	//tree.insert(-1);
-	
+	int arr[9] = { 13, 10, 15, 5, 11, 16, 4, 6, 7};
+
+	tree.insert(tree.getRoot(), &arr[0]);
+	tree.insert(tree.getRoot(), &arr[1]);
+	tree.insert(tree.getRoot(), &arr[2]);
+	tree.insert(tree.getRoot(), &arr[3]);
+	tree.insert(tree.getRoot(), &arr[4]);
+	tree.insert(tree.getRoot(), &arr[5]);
+	tree.insert(tree.getRoot(), &arr[6]);
+	tree.insert(tree.getRoot(), &arr[7]);
+
 	//tree.printTree();
-	tree.remove(3);
+	tree.remove(tree.getRoot(), &arr[1]);
+
 	//tree.remove(0);
 	//tree.remove(1);
-	tree.insert(7);
+	
+	tree.insert(tree.getRoot(), &arr[8]);
 
 	cout << endl;
 	

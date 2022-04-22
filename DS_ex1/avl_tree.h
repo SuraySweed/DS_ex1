@@ -13,10 +13,8 @@ public:
 	~Node();
 
 	T* data;
-	Node* parent;
 	Node* left;
 	Node* right;
-	int height;
 };
 
 template <class T>
@@ -25,10 +23,10 @@ private:
 	Node<T>* _root;
 	
 	int max(int num1, int num2);
-	void rightRotate(Node<T>* root);
-	void leftRotate(Node<T>* root);
-	void balanceTree(Node<T>* root);
-	void auxInsert(Node<T>* root, Node<T>* newNode);
+	Node<T>* rightRotate(Node<T>* root);
+	Node<T>* leftRotate(Node<T>* root);
+	Node<T>* balanceTree(Node<T>* root);
+	Node<T>* auxInsert(Node<T>* root, Node<T>* newNode);
 	Node<T>* findMinNodeInSubTree(Node<T>* subTreeRoot);
 	void auxRemove(Node<T>* root, Node<T>* node);
 	void deleteTree(Node<T>* root);
@@ -40,16 +38,18 @@ public:
 
 	int getHeight(Node<T>* node);
 	int getBalance(Node<T>* node);
-	void insert(const T& data);
+	Node<T>* getRoot() { return _root; }
+	Node<T>* insert(Node<T>* root, T* data);
 	Node<T>* find(Node<T>* root, const T& data);
-	bool remove(const T& data);
+	//bool remove(const T& data);
+	Node<T>* remove(Node<T>* root, T* data);
 	//T* inorder(Node<T>* root, int num, T* arr[]);
 };
 
 
 
 template<class T>
-inline Node<T>::Node(const T& data_t) : data(new T(data_t)), parent(nullptr), left(nullptr), right(nullptr), height(0) {}
+inline Node<T>::Node(const T& data_t) : data(new T(data_t)), left(nullptr), right(nullptr) {}
 
 /*
 template<class T>
@@ -72,7 +72,6 @@ inline Node<T>::Node(const Node<T>& node)
 	else {
 		right = nullptr;
 	}
-
 }
 
 template<class T>
@@ -111,92 +110,72 @@ inline int AVLTree<T>::max(int num1, int num2)
 }
 
 template<class T>
-inline void AVLTree<T>::rightRotate(Node<T>* root)
+inline Node<T>* AVLTree<T>::rightRotate(Node<T>* root)
 {
-	Node<T>* newRoot = root->left;
-	root->left = newRoot->right;
-	newRoot->right = root;
+	Node<T>* root_left = root->left;
+	Node<T>* root_right = root_left->right;
 
-	if (root->parent == nullptr) {
-		_root = newRoot;
-		newRoot->parent = nullptr;
-	}
-	else {
-		if (root->parent->left == root) {
-			root->parent->left = newRoot;
-		}
-		else {
-			root->parent->right = newRoot;
-		}
-		newRoot->parent = root->parent;
-	}
-	root->parent = newRoot;
+	root_left->right = root;
+	root->left = root_right;
+
+	return root_left;
 }
 
 template<class T>
-inline void AVLTree<T>::leftRotate(Node<T>* root)
+inline Node<T>* AVLTree<T>::leftRotate(Node<T>* root)
 {
-	Node<T>* newRoot = root->right;
-	root->right = newRoot->left;
-	newRoot->left = root;
+	Node<T>* root_right = root->right;
+	Node<T>* root_left = root_right->left;
 
-	//adjust tree
-	if (root->parent == NULL) {
-		_root = newRoot;
-		newRoot->parent = NULL;
-	}
-	else {
-		if (root->parent->left == root) {
-			root->parent->left = newRoot;
-		}
-		else {
-			root->parent->right = newRoot;
-		}
-		newRoot->parent = root->parent;
-	}
-	root->parent = newRoot;
+	root_right->left = root;
+	root->right = root_left;
+
+	return root_right;
 }
 
 template<class T>
-inline void AVLTree<T>::balanceTree(Node<T>* root)
+inline Node<T>* AVLTree<T>::balanceTree(Node<T>* root)
 {
 	int balance_factor = getBalance(root);
 	if (balance_factor > 1) {
 		if (getBalance(root->left) < 0)
-			leftRotate(root->left);
-		rightRotate(root);
+			root->left = leftRotate(root->left);
+		return rightRotate(root);
 	}
 	else if (balance_factor < -1) {
 		if (getBalance(root->right) > 0)
-			rightRotate(root->right);
-		leftRotate(root);
+			root->right = rightRotate(root->right);
+		return leftRotate(root);
 	}
+	return root;
 }
-
+/*
 template<class T>
-inline void AVLTree<T>::auxInsert(Node<T>* root, Node<T>* newNode)
+inline Node<T>* AVLTree<T>::auxInsert(Node<T>* root, Node<T>* newNode)
 {
 	if (root && (*(newNode->data) <= *(root->data))) {
 		if (root->left) {
-			auxInsert(root->left, newNode);
+			root->left = auxInsert(root->left, newNode);
 		}
 		else {
 			root->left = newNode;
-			newNode->parent = root;
+			//newNode->parent = root;
 		}
 	}
 
 	else {
 		if (root->right) {
-			auxInsert(root->right, newNode);
+			root->right = auxInsert(root->right, newNode);
 		}
-		root->right = newNode;
-		newNode->parent = root;
+		else {
+			root->right = newNode;
+			//newNode->parent = root;
+		}
 	}
-
-	balanceTree(root);
+	root = balanceTree(root);
+	return root;
 }
-
+*/
 template<class T>
 inline Node<T>* AVLTree<T>::findMinNodeInSubTree(Node<T>* subTreeRoot)
 {
@@ -206,14 +185,16 @@ inline Node<T>* AVLTree<T>::findMinNodeInSubTree(Node<T>* subTreeRoot)
 	return subTreeRoot;
 }
 
+/*
 template<class T>
 inline void AVLTree<T>::auxRemove(Node<T>* root, Node<T>* node)
 {
-	if (*(root->data) == *(node->data)) {
+	if (root == node) {
 		if (root->left == nullptr && root->right == nullptr) {
 			if (root->parent == nullptr) {
-				//root = nullptr;
-				delete root;
+				root = nullptr;
+				_root = root;
+
 			}
 			else {
 				if (root->parent->left == root)
@@ -221,8 +202,7 @@ inline void AVLTree<T>::auxRemove(Node<T>* root, Node<T>* node)
 				else
 					root->parent->right = nullptr;
 			}
-
-			//root = nullptr;
+			delete node;
 		}
 		else if (root->left != nullptr && root->right == nullptr) {
 			root->left->parent = root->parent;
@@ -258,6 +238,7 @@ inline void AVLTree<T>::auxRemove(Node<T>* root, Node<T>* node)
 
 	balanceTree(root);
 }
+*/
 
 
 template<class T>
@@ -307,17 +288,30 @@ inline int AVLTree<T>::getBalance(Node<T>* node)
 	return balanceFactor;
 }
 
-template<class T>
-inline void AVLTree<T>::insert(const T& data)
-{
-	Node<T>* newNode = new Node<T>(data);
 
-	if (!_root)
-		_root = newNode;
-	else {
-		auxInsert(_root, newNode);
+template<class T>
+inline Node<T>* AVLTree<T>::insert(Node<T>* root , T* data)
+{
+	if (root == nullptr) {
+		root = new Node<T>(*data);
+		if (_root == nullptr) {
+			_root = root;
+		}
+		return root;
 	}
-	return;
+
+	if (*data < *(root->data)) {
+		root->left = insert(root->left, data);
+	}
+	else if (*data > *(root->data)) {
+		root->right = insert(root->right, data);
+	}
+	else {
+		return root;
+	}
+
+	root = balanceTree(root);
+	return root;
 }
 
 template<class T>
@@ -336,6 +330,48 @@ inline Node<T>* AVLTree<T>::find(Node<T>* root, const T& data)
 }
 
 template<class T>
+inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
+{
+	if (root == nullptr) {
+		return root;
+	}
+
+	if (*data < *(root->data)) {
+		root->left = remove(root->left, data);
+	}
+
+	else if (*data > *(root->data)) {
+		root->right = remove(root->right, data);
+	}
+
+	else {
+		if ((root->left == nullptr) || (root->right == nullptr)) {
+			Node<T>* temp = root->left ? root->left : root->right;
+			if (temp == nullptr) {
+				temp = root;
+				root = nullptr;
+			}
+			else {
+				*(root) = *(temp);
+			}
+			delete temp;
+		}
+		else {
+			Node<T>* temp = findMinNodeInSubTree(root->right);
+			*(root->data) = *(temp->data);
+			root->right = remove(root->right, temp->data);
+		}
+	}
+
+	if (root == nullptr) {
+		return root;
+	}
+
+	root = balanceTree(root);
+	return root;
+}
+/*
+template<class T>
 inline bool AVLTree<T>::remove(const T& data)
 {
 	Node<T>* node = find(_root, data);
@@ -344,6 +380,6 @@ inline bool AVLTree<T>::remove(const T& data)
 	else
 		auxRemove(_root, node);
 	return true;
-}
+}*/
 
 #endif
