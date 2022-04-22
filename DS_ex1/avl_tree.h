@@ -300,10 +300,10 @@ inline Node<T>* AVLTree<T>::insert(Node<T>* root , T* data)
 		return root;
 	}
 
-	if (*data < *(root->data)) {
+	if (root && (*data < *(root->data))) {
 		root->left = insert(root->left, data);
 	}
-	else if (*data > *(root->data)) {
+	else if (root && (*data > *(root->data))) {
 		root->right = insert(root->right, data);
 	}
 	else {
@@ -350,6 +350,7 @@ inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 			if (temp == nullptr) {
 				temp = root;
 				root = nullptr;
+				_root = root;
 			}
 			else {
 				*(root) = *(temp);
