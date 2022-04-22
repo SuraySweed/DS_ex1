@@ -146,11 +146,14 @@
     <ClInclude Include="companies.h" />
     <ClInclude Include="employees_id.h" />
     <ClInclude Include="employees_salary.h" />
-    <ClInclude Include="generic_avl_tree.h" />
     <ClInclude Include="library1.h" />
+    <ClInclude Include="system_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AVLTests.cpp" />
+    <ClCompile Include="companies.cpp" />
+    <ClCompile Include="employees_id.cpp" />
+    <ClCompile Include="employees_salary.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
