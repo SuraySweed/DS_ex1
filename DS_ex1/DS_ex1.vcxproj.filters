@@ -18,9 +18,6 @@
     <ClInclude Include="library1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="generic_avl_tree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="companies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,12 +33,24 @@
     <ClInclude Include="avl_tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="system_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AVLTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="employees_id.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="employees_salary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="companies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
