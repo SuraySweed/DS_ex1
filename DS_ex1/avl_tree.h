@@ -7,6 +7,7 @@ template <class T>
 class Node {
 public:
 	Node(const T& data_t);
+	Node(T* data) : data(data), left(nullptr), right(nullptr) {}
 	//Node(const T& data_t, Node<T>* parent, Node<T>* left, Node<T>* right, int height);
 	Node(const Node<T>& node);
 	Node<T>& operator=(const Node<T>& node);
@@ -26,9 +27,14 @@ private:
 	Node<T>* rightRotate(Node<T>* root);
 	Node<T>* leftRotate(Node<T>* root);
 	Node<T>* balanceTree(Node<T>* root);
-	Node<T>* auxInsert(Node<T>* root, Node<T>* newNode);
+	//Node<T>* auxInsert(Node<T>* root, Node<T>* newNode);
 	Node<T>* findMinNodeInSubTree(Node<T>* subTreeRoot);
-	void auxRemove(Node<T>* root, Node<T>* node);
+	//void auxRemove(Node<T>* root, Node<T>* node);
+	void auxInorder(Node<T>* root, int& k, T** arr, int& i);
+	void inorderArray(Node<T>* root, T** arr, int& i);
+	void mergeArray(T** arr1, int size1, T** arr2, int size2, T** newArr);
+	Node<T>* doMergerTree(T** arr1, int size1, T** arr2, int size2, T** newArr);
+	Node<T>* auxBuildTree(int left, int right, Node<T>* root, T** newArr);
 	void deleteTree(Node<T>* root);
 
 public:
@@ -41,6 +47,9 @@ public:
 	Node<T>* getRoot() { return _root; }
 	Node<T>* insert(Node<T>* root, T* data);
 	Node<T>* find(Node<T>* root, const T& data);
+	T** inorderK(Node<T>* root, int k, T** arr);
+	void mergeTree(T** arr1, int size1, T** arr2, int size2, T** newArr);
+	void fillArray(T* arr[]);
 	//bool remove(const T& data);
 	Node<T>* remove(Node<T>* root, T* data);
 	//T* inorder(Node<T>* root, int num, T* arr[]);
@@ -251,6 +260,86 @@ inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree)
 
 
 template<class T>
+inline void AVLTree<T>::auxInorder(Node<T>* root, int& k, T** arr, int& i)
+{
+	if (root == nullptr || k <= 0)
+		return;
+	auxInorder(root->left, k, arr, i);
+	if (i < k) {
+		arr[i] = root->data;
+		i++;
+		auxInorder(root->right, k, arr, i);
+	}
+	return;
+}
+
+template<class T>
+inline void AVLTree<T>::inorderArray(Node<T>* root, T** arr, int& i)
+{
+	if (root == nullptr)
+		return;
+	inorderArray(root->left, arr, i);
+	arr[i] = root->data;
+	i++;
+	inorderArray(root->right, arr, i);
+	return;
+}
+
+template<class T>
+inline void AVLTree<T>::mergeArray(T** arr1, int size1, T** arr2, int size2, T** newArr)
+{
+	int i = 0, j = 0, k = 0;
+	while (i < size1 && j < size2) {
+		if (*arr1[i] < *arr2[j]) {
+			newArr[k] = arr1[i];
+			i++;
+			k++;
+		}
+		else {
+			newArr[k] = arr2[j];
+			j++;
+			k++;
+		}
+	}
+	if (i >= size1) {
+		while (j < size2) {
+			newArr[k] = arr2[j];
+			j++;
+			k++;
+		}
+	}
+	if (j >= size2) {
+		while (i < size1) {
+			newArr[k] = arr1[i];
+			i++;
+			k++;
+		}
+	}
+}
+
+template<class T>
+inline Node<T>* AVLTree<T>::doMergerTree(T** arr1, int size1, T** arr2, int size2, T** newArr)
+{
+	mergeArray(arr1, size1, arr2, size2, newArr);
+	Node<T>* root = nullptr;
+	int left = 0;
+	int right = size1 + size2 -1 ;
+	Node<T>* newRoot = auxBuildTree(left, right, root, newArr);
+	return newRoot;
+}
+
+template<class T>
+inline Node<T>* AVLTree<T>::auxBuildTree(int left, int right, Node<T>* root, T** newArr)
+{
+	if (right < left)
+		return nullptr;
+	root = new Node<T>(new T(*(newArr[((right + left) / 2)])));
+	root->left = auxBuildTree(left, ((right + left) / 2) - 1, root->left, newArr);
+	root->right = auxBuildTree(((left + right) / 2) + 1, right, root->right, newArr);
+	return root;
+}
+
+template<class T>
 inline void AVLTree<T>::deleteTree(Node<T>* root)
 {
 	if (root == NULL)
@@ -327,6 +416,27 @@ inline Node<T>* AVLTree<T>::find(Node<T>* root, const T& data)
 	}
 
 	return nullptr;
+}
+
+template<class T>
+inline T** AVLTree<T>::inorderK(Node<T>* root, int k, T** arr)
+{
+	int j = 0;
+	auxInorder(root, k, arr, j);
+	return arr;
+}
+
+template<class T>
+inline void AVLTree<T>::mergeTree(T** arr1, int size1, T** arr2, int size2, T** newArr)
+{
+	_root = doMergerTree(arr1, size1, arr2, size2, newArr);
+}
+
+template<class T>
+inline void AVLTree<T>::fillArray(T* arr[])
+{
+	int i = 0;
+	inorderArray(_root, arr, i);
 }
 
 template<class T>

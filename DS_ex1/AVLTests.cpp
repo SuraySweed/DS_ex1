@@ -18,6 +18,7 @@ using namespace std;
 
 int main() {
 	AVLTree<int> tree;
+	AVLTree<int> tree2;
 
 	//Specific Cases
 
@@ -31,21 +32,33 @@ int main() {
 
 	tree.insert(tree.getRoot(), &arr[0]);
 	tree.insert(tree.getRoot(), &arr[1]);
-	/*
 	tree.insert(tree.getRoot(), &arr[2]);
 	tree.insert(tree.getRoot(), &arr[3]);
+	/*
 	tree.insert(tree.getRoot(), &arr[4]);
 	tree.insert(tree.getRoot(), &arr[5]);
 	tree.insert(tree.getRoot(), &arr[6]);
 	tree.insert(tree.getRoot(), &arr[7]);
 	*/
 	//tree.printTree();
-	tree.remove(tree.getRoot(), &arr[0]);
+	//tree.remove(tree.getRoot(), &arr[0]);
 
 	//tree.remove(0);
 	//tree.remove(1);
 	
-	tree.insert(tree.getRoot(), &arr[8]);
+	//tree.insert(tree.getRoot(), &arr[8]);
+	tree2.insert(tree2.getRoot(), &arr[4]);
+	tree2.insert(tree2.getRoot(), &arr[5]);
+	tree2.insert(tree2.getRoot(), &arr[6]);
+	tree2.insert(tree2.getRoot(), &arr[7]);
+
+	int** array1 = new int*[4];
+	int** array2 = new int*[4];
+	int** newArray = new int*[8];
+	tree.fillArray(array1);
+	tree2.fillArray(array2);
+
+	tree.mergeTree(array1, 4, array2, 4, newArray);
 
 	cout << endl;
 	
