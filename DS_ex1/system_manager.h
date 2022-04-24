@@ -21,7 +21,7 @@ private:
 public:
 	SystemManager();
 	SystemManager(const SystemManager& system_manager);
-	~SystemManager();
+    ~SystemManager();
 
     StatusType AddCompany(int CompanyID, int Value);
     StatusType AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);

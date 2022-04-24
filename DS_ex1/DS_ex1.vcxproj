@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="active_companies.h" />
+    <ClInclude Include="active_employees.h" />
     <ClInclude Include="avl_tree.h" />
     <ClInclude Include="companies.h" />
     <ClInclude Include="employees_id.h" />
@@ -150,11 +151,14 @@
     <ClInclude Include="system_manager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="active_companies.cpp" />
     <ClCompile Include="AVLTests.cpp" />
     <ClCompile Include="companies.cpp" />
     <ClCompile Include="employees_id.cpp" />
     <ClCompile Include="employees_salary.cpp" />
+    <ClCompile Include="library1.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="system_manager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

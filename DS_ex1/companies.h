@@ -18,6 +18,12 @@ public:
 	~CompanyData();
 	CompanyData& operator=(const CompanyData&);
 
+	AVLTree<EmployeeIdData>& getEmployeesTreeInCompany() { return company_employees; }
+	void incEmployeesNumber() { employees_number++; }
+	int getCompanyID() { return company_id; }
+	int getEmployeesNumber() { return employees_number; }
+	int getCompanyValue() { return value; }
+
 	bool operator<(const CompanyData& other) const;
 	bool operator>(const CompanyData& other) const;
 	bool operator==(const CompanyData& other) const;

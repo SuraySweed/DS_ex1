@@ -16,10 +16,10 @@ public:
 	~EmployeeIdData();
 	EmployeeIdData& operator=(const EmployeeIdData&);
 
-	int getEmployeeID(const EmployeeIdData& employeeIddata);
-	int getEmployerID(const EmployeeIdData& employeeIdData);
-	int getEmployeeSalay(const EmployeeIdData& employeeIdData);
-	int getEmployeeGrade(const EmployeeIdData& employeeIdData);
+	int getEmployeeID() { return employee_id; }
+	int getEmployerID() { return employer_id; }
+	int getEmployeeSalay() { return salary; }
+	int getEmployeeGrade() { return grade; }
 
 	bool operator<(const EmployeeIdData& other) const;
 	bool operator>(const EmployeeIdData& other) const;

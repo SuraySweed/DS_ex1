@@ -254,9 +254,7 @@ template<class T>
 inline AVLTree<T>::AVLTree() : _root(nullptr) {}
 
 template<class T>
-inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree)
-{
-}
+inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree) = default;
 
 
 template<class T>

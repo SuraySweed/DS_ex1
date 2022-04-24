@@ -36,6 +36,9 @@
     <ClInclude Include="system_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="active_employees.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +54,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="companies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="library1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="system_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="active_companies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
