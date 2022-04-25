@@ -17,6 +17,7 @@ private:
 
 	int numberOfEmployees;
 	int numberOfCompanies;
+    EmployeeSalaryData* highestSalaryAll;
 
 public:
 	SystemManager();

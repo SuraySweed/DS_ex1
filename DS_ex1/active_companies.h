@@ -6,54 +6,20 @@
 #include "employees_salary.h"
 #include "active_employees.h"
 
-/*
-class ActiveEmployeeData {
-private:
-	int employee_id;
-	int salary;
-
-public:
-	ActiveEmployeeData(int employee_id, int salary) : employee_id(employee_id), salary(salary) {}
-	ActiveEmployeeData(ActiveEmployeeData& active_employee_data) : employee_id(active_employee_data.employee_id), 
-		salary(active_employee_data.salary) {}
-
-	~ActiveEmployeeData() {}
-
-	bool operator>(const ActiveEmployeeData& other) const {
-		if (this->salary > other.salary) {
-			return true;
-		}
-		else if (this->salary == other.salary) {
-			return (this->employee_id < other.employee_id);
-		}
-		return false;
-	}
-	bool operator<(const ActiveEmployeeData& other) const {
-		if (this->salary < other.salary) {
-			return true;
-		}
-		else if (this->salary == other.salary) {
-			return (this->employee_id > other.employee_id);
-		}
-		return false;
-	}
-	
-	bool operator==(const ActiveEmployeeData& other) const {
-		return ((this->salary == other.salary) && (this->employee_id == other.employee_id));
-	}
-};
-*/
 class ActiveCompaniesData {
 private:
 	int company_id;
-	AVLTree<ActiveEmployeeData> company_employees; //by id
+	AVLTree<EmployeeSalaryData> company_employees; //by id
+	EmployeeSalaryData* highestSalary;
 
 public:
 	ActiveCompaniesData(int company_id);
 	ActiveCompaniesData(const ActiveCompaniesData& active_companies_data);
 	~ActiveCompaniesData();
 
-	AVLTree<ActiveEmployeeData>& getActiveCompanyEmployees() { return company_employees; }
+	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployees() { return company_employees; }
+	EmployeeSalaryData* getHighestSalary() { return highestSalary; }
+	void setHighestSalary(EmployeeSalaryData* highest_salary);
 
 	bool operator<(const ActiveCompaniesData& other) const;
 	bool operator>(const ActiveCompaniesData& other) const;

@@ -3,14 +3,15 @@
 
 SystemManager::SystemManager() : employeesTreeByID(AVLTree<EmployeeIdData>()), 
 	employeesTreeBySalary(AVLTree<EmployeeSalaryData>()), companiesTreeByID(AVLTree<CompanyData>()), 
-	activeCompaniesTree(AVLTree<ActiveCompaniesData>()), numberOfEmployees(0), numberOfCompanies(0) {}
+	activeCompaniesTree(AVLTree<ActiveCompaniesData>()), numberOfEmployees(0), numberOfCompanies(0), highestSalaryAll(nullptr) {}
 
 SystemManager::SystemManager(const SystemManager& system_manager) : 
 	employeesTreeByID(AVLTree<EmployeeIdData>(system_manager.employeesTreeByID)), 
 	employeesTreeBySalary(AVLTree<EmployeeSalaryData>(system_manager.employeesTreeBySalary)),
 	companiesTreeByID(AVLTree<CompanyData>(system_manager.companiesTreeByID)),
 	activeCompaniesTree(AVLTree<ActiveCompaniesData>(system_manager.activeCompaniesTree)),
-	numberOfEmployees(system_manager.numberOfEmployees), numberOfCompanies(system_manager.numberOfCompanies) {}
+	numberOfEmployees(system_manager.numberOfEmployees), numberOfCompanies(system_manager.numberOfCompanies), 
+	highestSalaryAll(new EmployeeSalaryData(*(system_manager.highestSalaryAll))) {}
 
 SystemManager::~SystemManager() {}
 
@@ -55,9 +56,10 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 
 		numberOfEmployees++;
 		CD_ptr->incEmployeesNumber();
+		highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 	}
 	
-	ActiveEmployeeData AED(EmployeeID, Salary); 
+	//ActiveEmployeeData AED(EmployeeID, Salary); 
 	ActiveCompaniesData ACD(CompanyID);
 	if (!activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		activeCompaniesTree.insert(activeCompaniesTree.getRoot(), &ACD);
@@ -65,7 +67,8 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 
 	//problem in 2nd line
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-	ACD_ptr->getActiveCompanyEmployees().insert(ACD_ptr->getActiveCompanyEmployees().getRoot(), &AED);
+	ACD_ptr->getActiveCompanyEmployees().insert(ACD_ptr->getActiveCompanyEmployees().getRoot(), &ESD);
+	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
 
 	return SUCCESS;
 }

@@ -52,6 +52,7 @@ public:
 	void fillArray(T* arr[]);
 	//bool remove(const T& data);
 	Node<T>* remove(Node<T>* root, T* data);
+	Node<T>* getMax(Node<T>* root);
 	//T* inorder(Node<T>* root, int num, T* arr[]);
 };
 
@@ -479,6 +480,16 @@ inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 	root = balanceTree(root);
 	return root;
 }
+
+template<class T>
+inline Node<T>* AVLTree<T>::getMax(Node<T>* root)
+{
+	while (root) {
+		root = root->right;
+	}
+	return root;
+}
+
 /*
 template<class T>
 inline bool AVLTree<T>::remove(const T& data)

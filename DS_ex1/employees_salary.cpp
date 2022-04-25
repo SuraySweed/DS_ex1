@@ -24,15 +24,27 @@ EmployeeSalaryData& EmployeeSalaryData::operator=(const EmployeeSalaryData& empl
 
 bool EmployeeSalaryData::operator<(const EmployeeSalaryData& other) const
 {
-	return (this->salary < other.salary);
+	if (this->salary < other.salary) {
+		return true;
+	}
+	else if (this->salary == other.salary) {
+		return (this->employee_id > other.employee_id);
+	}
+	return false;
 }
 
 bool EmployeeSalaryData::operator>(const EmployeeSalaryData& other) const
 {
-	return (this->salary > other.salary);
+	if (this->salary > other.salary) {
+		return true;
+	}
+	else if (this->salary == other.salary) {
+		return (this->employee_id < other.employee_id);
+	}
+	return false;
 }
 
 bool EmployeeSalaryData::operator==(const EmployeeSalaryData& other) const
 {
-	return (this->salary == other.salary);
+	return((this->salary == other.salary) && (this->employee_id == other.employee_id));
 }
