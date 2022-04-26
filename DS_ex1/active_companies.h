@@ -9,18 +9,23 @@
 class ActiveCompaniesData {
 private:
 	int company_id;
-	AVLTree<EmployeeSalaryData> company_employees; //by id
+	AVLTree<EmployeeSalaryData> employeesBySalary; //by salary
+	AVLTree<EmployeeIdData> employeesByID;    // by id
 	EmployeeSalaryData* highestSalary;
+	int numberOfEmployees;
 
 public:
 	ActiveCompaniesData(int company_id);
 	ActiveCompaniesData(const ActiveCompaniesData& active_companies_data);
 	~ActiveCompaniesData();
 
-	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployees() { return company_employees; }
+	AVLTree<EmployeeIdData>& getActiveCompanyEmployeesByID() { return employeesByID; }
+	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployeesBySalary() { return employeesBySalary; }
 	EmployeeSalaryData* getHighestSalary() { return highestSalary; }
 	void setHighestSalary(EmployeeSalaryData* highest_salary);
-	void removeEmployee(int employeeID, int salary);
+	int getNumberOfEmployees() { return numberOfEmployees; }
+	void incNumberOfEmployees() { numberOfEmployees++; }
+	bool removeEmployee(int employeeID, int salary);
 
 	bool operator<(const ActiveCompaniesData& other) const;
 	bool operator>(const ActiveCompaniesData& other) const;
