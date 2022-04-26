@@ -69,6 +69,7 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 	ACD_ptr->getActiveCompanyEmployees().insert(ACD_ptr->getActiveCompanyEmployees().getRoot(), &ESD);
 	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
+	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
 
 	return SUCCESS;
 }
@@ -112,12 +113,14 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
 	CD_ptr->removeEmployee(EmployeeID);
 	ACD_ptr->removeEmployee(EmployeeID, ESD_ptr->getSalary());
+	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
 
 	//check if the company has no employees
 	if (CD_ptr->getEmployeesNumber() == 0) {
 		activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
 	}
 
+	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 	numberOfEmployees--;
 	return SUCCESS;
 
@@ -177,6 +180,50 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 	if (EmployeeID <= 0 || SalaryIncrease <= 0) {
 		return INVALID_INPUT;
 	}
+	EmployeeIdData EID(EmployeeID, 0, 0, 0);
+	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+
+	if (EID_ptr == nullptr)
+		return FAILURE;
+
+	EID_ptr->setSalary(EID_ptr->getSalary() + SalaryIncrease);
+	if (BumpGrade > 0)
+		EID_ptr->setGrade(EID_ptr->getGrade + 1);
+
+	EmployeeSalaryData ESD(EmployeeID, 0, 0, 0);
+	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+
+	ESD_ptr->setSalary(ESD_ptr->getSalary() + SalaryIncrease);
+	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
+
+	CompanyData CD(EID_ptr->getEmployerID(), 0, 0);
+	CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
+	EmployeeIdData* EIDInCompany_ptr = CD_ptr->getEmployeesTreeInCompany().find(CD_ptr->getEmployeesTreeInCompany().getRoot(), EID)->data;
+	EIDInCompany_ptr->setSalary(EIDInCompany_ptr->getSalary() + SalaryIncrease);
+	
+	ActiveCompaniesData ACD(ESD_ptr->getEmployerID());
+	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	EmployeeSalaryData* ESDInCompany_ptr = ACD_ptr->getActiveCompanyEmployees().find(ACD_ptr->getActiveCompanyEmployees().getRoot(), ESD)->data;
+	ESDInCompany_ptr->setSalary(ESDInCompany_ptr->getSalary() + SalaryIncrease);
+	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
+
+	if (BumpGrade > 0) {
+		ESD_ptr->setGrade(ESD_ptr->getGrade + 1);
+		EIDInCompany_ptr->setGrade(EIDInCompany_ptr->getGrade + 1);
+		ESDInCompany_ptr->setGrade(ESDInCompany_ptr->getGrade + 1);
+	}
+
+	return SUCCESS;
+
+
+}
+
+StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
+{
+	if (EmployeeID <= 0 || NewCompanyID <= 0) {
+		return INVALID_INPUT;
+	}
+
 }
 
 

@@ -17,6 +17,9 @@ public:
 	int getSalary() { return salary; }
 	int getGrade() { return grade; }
 
+	void setSalary(int newSalary) { salary = newSalary; }
+	void setGrade(int newGrade) { grade = newGrade; }
+
 	bool operator<(const EmployeeSalaryData& other) const;
 	bool operator>(const EmployeeSalaryData& other) const;
 	bool operator==(const EmployeeSalaryData& other) const;
