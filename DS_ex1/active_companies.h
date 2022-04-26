@@ -20,6 +20,7 @@ public:
 	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployees() { return company_employees; }
 	EmployeeSalaryData* getHighestSalary() { return highestSalary; }
 	void setHighestSalary(EmployeeSalaryData* highest_salary);
+	void removeEmployee(int employeeID, int salary);
 
 	bool operator<(const ActiveCompaniesData& other) const;
 	bool operator>(const ActiveCompaniesData& other) const;

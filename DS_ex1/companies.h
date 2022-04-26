@@ -23,6 +23,9 @@ public:
 	int getCompanyID() { return company_id; }
 	int getEmployeesNumber() { return employees_number; }
 	int getCompanyValue() { return value; }
+	void setValue(int newValue) { value = newValue; }
+
+	void removeEmployee(int employeeID);
 
 	bool operator<(const CompanyData& other) const;
 	bool operator>(const CompanyData& other) const;

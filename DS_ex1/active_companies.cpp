@@ -14,6 +14,14 @@ void ActiveCompaniesData::setHighestSalary(EmployeeSalaryData* highest_salary)
 	highestSalary = highest_salary;
 }
 
+void ActiveCompaniesData::removeEmployee(int employeeID, int salary)
+{
+	EmployeeSalaryData ESD(employeeID, 0, salary, 0);
+	EmployeeSalaryData* ESD_ptr = company_employees.find(company_employees.getRoot(), ESD)->data;
+	company_employees.remove(company_employees.getRoot(), ESD_ptr);
+	
+}
+
 bool ActiveCompaniesData::operator<(const ActiveCompaniesData& other) const
 {
 	return (this->company_id < other.company_id);

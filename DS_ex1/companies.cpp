@@ -22,6 +22,14 @@ CompanyData& CompanyData::operator=(const CompanyData& company_data)
 	return *this;
 }
 
+void CompanyData::removeEmployee(int employeeID)
+{
+	EmployeeIdData EID(employeeID, 0, 0, 0);
+	EmployeeIdData* EID_ptr = company_employees.find(company_employees.getRoot(), EID)->data;
+	company_employees.remove(company_employees.getRoot(), EID_ptr);
+	employees_number--;
+}
+
 bool CompanyData::operator<(const CompanyData& other) const
 {
 	return (this->company_id < other.company_id);

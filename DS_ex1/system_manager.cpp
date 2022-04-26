@@ -88,10 +88,39 @@ StatusType SystemManager::RemoveCompany(int CompanyID)
 	return SUCCESS;
 }
 
-/// NEEEDDD TOOOO DOOOOO
 StatusType SystemManager::RemoveEmployee(int EmployeeID)
 {
-	return StatusType();
+	if (EmployeeID <= 0)
+		return INVALID_INPUT;
+
+	//check if employee exist
+	EmployeeIdData EID(EmployeeID, 0, 0, 0);
+	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	if (EID_ptr == nullptr)
+		return FAILURE;
+
+	//get the employees pionters
+	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
+	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+	CompanyData CD(ESD_ptr->getEmployerID(), 0, 0);
+	CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
+	ActiveCompaniesData ACD(ESD_ptr->getEmployerID());
+	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+
+	//remove from employees trees
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
+	CD_ptr->removeEmployee(EmployeeID);
+	ACD_ptr->removeEmployee(EmployeeID, ESD_ptr->getSalary());
+
+	//check if the company has no employees
+	if (CD_ptr->getEmployeesNumber() == 0) {
+		activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
+	}
+
+	numberOfEmployees--;
+	return SUCCESS;
+
 }
 
 StatusType SystemManager::GetCompanyInfo(int CompanyID, int* Value, int* NumEmployees)
@@ -121,11 +150,37 @@ StatusType SystemManager::GetEmployeeInfo(int EmployeeID, int* EmployerID, int* 
 	}
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
 	*EmployerID = EID_ptr->getEmployerID();
-	*Salary = EID_ptr->getEmployeeSalay();
-	*Grade = EID_ptr->getEmployeeGrade();
+	*Salary = EID_ptr->getSalary();
+	*Grade = EID_ptr->getGrade();
 
 	return SUCCESS;
 }
+
+StatusType SystemManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
+{
+	if (CompanyID <= 0 || ValueIncrease <= 0)
+		return INVALID_INPUT;
+
+	//get the company data adn update it
+	CompanyData CD(CompanyID, 0, 0);
+	CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
+	if (CD_ptr == nullptr)
+		return FAILURE;
+
+	CD_ptr->setValue(CD_ptr->getCompanyValue() + ValueIncrease);
+
+	return SUCCESS;
+}
+
+StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade)
+{
+	if (EmployeeID <= 0 || SalaryIncrease <= 0) {
+		return INVALID_INPUT;
+	}
+}
+
+
+
 
 
 

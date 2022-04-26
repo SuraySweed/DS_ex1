@@ -13,6 +13,9 @@ public:
 	EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData);
 	~EmployeeSalaryData();
 	EmployeeSalaryData& operator=(const EmployeeSalaryData&);
+	int getEmployerID() { return employer_id; }
+	int getSalary() { return salary; }
+	int getGrade() { return grade; }
 
 	bool operator<(const EmployeeSalaryData& other) const;
 	bool operator>(const EmployeeSalaryData& other) const;

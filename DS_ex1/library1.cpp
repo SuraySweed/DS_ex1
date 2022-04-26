@@ -11,22 +11,26 @@ void* Init()
 //check if DS is nullptr --- neeeeeddddd
 StatusType AddCompany(void* DS, int CompanyID, int Value)
 {
+	if(DS == NULL) return INVALID_INPUT;
 	return ((SystemManager*)DS)->AddCompany(CompanyID, Value);
 }
 
 StatusType AddEmployee(void* DS, int EmployeeID, int CompanyID, int Salary, int Grade)
 {
+	if(DS == NULL) return INVALID_INPUT;
 	return ((SystemManager*)DS)->AddEmployee(EmployeeID, CompanyID, Salary, Grade);
 }
 
 StatusType RemoveCompany(void* DS, int CompanyID)
 {
+	if(DS == NULL) return INVALID_INPUT;
 	return ((SystemManager*)DS)->RemoveCompany(CompanyID);
 }
 
 StatusType RemoveEmployee(void* DS, int EmployeeID)
 {
-	return StatusType();
+	if(DS == NULL) return INVALID_INPUT;
+	return ((SystemManager*)DS)->RemoveEmployee(DS, EmployeeID);
 }
 
 StatusType GetCompanyInfo(void* DS, int CompanyID, int* Value, int* NumEmployees)
