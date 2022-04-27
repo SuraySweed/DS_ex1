@@ -16,6 +16,7 @@ public:
 	int getEmployerID() { return employer_id; }
 	int getSalary() { return salary; }
 	int getGrade() { return grade; }
+	int getEmployeeID() { return employee_id; }
 
 	void setSalary(int newSalary) { salary = newSalary; }
 	void setGrade(int newGrade) { grade = newGrade; }
