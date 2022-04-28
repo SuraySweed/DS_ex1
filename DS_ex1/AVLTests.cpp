@@ -28,26 +28,38 @@
 //	3 BF: 0 Height: 0 */
 //
 //	//basic LL root change
+//
 //	int arr[9] = { 13, 10, 15, 5, 11, 16, 4, 6, 7};
-//
+//	
 //	tree.insert(tree.getRoot(), &arr[0]);
-//	//tree.remove(tree.getRoot(), &arr[0]);
-//	//tree.remove(tree.getRoot(), &arr[0]);
-//
 //	tree.insert(tree.getRoot(), &arr[1]);
 //	tree.insert(tree.getRoot(), &arr[2]);
 //	tree.insert(tree.getRoot(), &arr[3]);
+//	tree.insert(tree.getRoot(), &arr[4]);
+//	tree.insert(tree.getRoot(), &arr[5]);
+//	tree.insert(tree.getRoot(), &arr[6]);
+//	tree.insert(tree.getRoot(), &arr[7]);
+//	tree.insert(tree.getRoot(), &arr[8]);
+//	
+//	int min = 5;
+//	int max = 14;
+//	int size = tree.getNodesNumberBetweenMinMax(tree.getRoot(), &min, &max);
+//	int** arr33 = new int * [size];
+//	tree.InorderMinMax(arr33, &min, &max);
+//	for(int i =0; i<size; i++){
+//		printf("%d ", *arr33[i]);
+//	}
 //
+//	//int** arr23 = new int* [4];
+//	//tree.fillArrayMaxToMinInTree(arr23);
 //
-//	int** arr23 = new int* [4];
-//	tree.fillArrayMaxToMinInTree(arr23);
-//
+//	/*
 //	int arr2345[4] = { 0 };
 //	for (int i = 0; i < 4; i++) {
 //		arr2345[i] = *arr23[i];
 //	}
 //
-//
+//	*/
 //	/*
 //	tree.insert(tree.getRoot(), &arr[4]);
 //	tree.insert(tree.getRoot(), &arr[5]);
@@ -61,6 +73,7 @@
 //	//tree.remove(1);
 //	
 //	//tree.insert(tree.getRoot(), &arr[8]);
+//	/*
 //	tree2.insert(tree2.getRoot(), &arr[4]);
 //	tree2.insert(tree2.getRoot(), &arr[5]);
 //	tree2.insert(tree2.getRoot(), &arr[6]);

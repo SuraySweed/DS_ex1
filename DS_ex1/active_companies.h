@@ -26,6 +26,9 @@ public:
 	int getNumberOfEmployees() { return numberOfEmployees; }
 	void incNumberOfEmployees() { numberOfEmployees++; }
 	bool removeEmployee(int employeeID, int salary);
+	void setNumberOfEmployees(int num) { numberOfEmployees = num; }
+	void setActiveCompanyEmployeesByID(AVLTree<EmployeeIdData>& other);
+	void setActiveCompanyEmployeesBySalary(AVLTree<EmployeeSalaryData>& other);
 
 	bool operator<(const ActiveCompaniesData& other) const;
 	bool operator>(const ActiveCompaniesData& other) const;

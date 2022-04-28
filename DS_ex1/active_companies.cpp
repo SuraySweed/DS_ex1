@@ -20,6 +20,7 @@ void ActiveCompaniesData::setHighestSalary(EmployeeSalaryData* highest_salary)
 bool ActiveCompaniesData::removeEmployee(int employeeID, int salary)
 {
 	EmployeeSalaryData ESD(employeeID, 0, salary, 0);
+	if (!employeesBySalary.find(employeesBySalary.getRoot(), ESD)) return false;
 	EmployeeSalaryData* ESD_ptr = employeesBySalary.find(employeesBySalary.getRoot(), ESD)->data;
 
 	EmployeeIdData EID(employeeID, 0, 0, 0);
@@ -37,6 +38,16 @@ bool ActiveCompaniesData::removeEmployee(int employeeID, int salary)
 	}
 
 	return false;
+}
+
+void ActiveCompaniesData::setActiveCompanyEmployeesByID(AVLTree<EmployeeIdData>& other)
+{
+	employeesByID = other;
+}
+
+void ActiveCompaniesData::setActiveCompanyEmployeesBySalary(AVLTree<EmployeeSalaryData>& other)
+{
+	employeesBySalary = other;
 }
 
 bool ActiveCompaniesData::operator<(const ActiveCompaniesData& other) const

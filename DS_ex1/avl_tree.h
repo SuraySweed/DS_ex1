@@ -34,6 +34,7 @@ private:
 	void auxInorder(Node<T>* root, int& k, T** arr, int& i);
 	void inorderArray(Node<T>* root, T** arr, int& i);
 	void MaxToMinInArray(Node<T>* root, T** arr, int& i);
+	void InorderMinMaxAux(Node<T>* root, T** arr, int& i, T* min, T* max);
 	void mergeArray(T** arr1, int size1, T** arr2, int size2, T** newArr);
 	Node<T>* doMergerTree(T** arr1, int size1, T** arr2, int size2, T** newArr);
 	Node<T>* auxBuildTree(int left, int right, Node<T>* root, T** newArr);
@@ -53,6 +54,8 @@ public:
 	void mergeTree(T** arr1, int size1, T** arr2, int size2, T** newArr);
 	void fillArray(T* arr[]);
 	void fillArrayMaxToMinInTree(T* arr[]);
+	int getNodesNumberBetweenMinMax(Node<T>* root, T* min, T* max);
+	void InorderMinMax(T* arr[], T* min, T* max);
 	//bool remove(const T& data);
 	Node<T>* remove(Node<T>* root, T* data);
 	Node<T>* getMax(Node<T>* root);
@@ -219,6 +222,54 @@ inline void AVLTree<T>::MaxToMinInArray(Node<T>* root, T** arr, int& i)
 }
 
 template<class T>
+inline int AVLTree<T>::getNodesNumberBetweenMinMax(Node<T>* root, T* min, T* max)
+{
+	if (!root) {
+		return 0;
+	}
+	if (*(root->data) == *min && *(root->data) == *max) {
+		return 1;
+	}
+	if ((*(root->data) < *max || *(root->data) == *max) && (*(root->data) > *min || *(root->data) == *min)) {
+		return  1 + getNodesNumberBetweenMinMax(root->left, min, max) + getNodesNumberBetweenMinMax(root->right, min, max);
+	}
+	else if (*(root->data) < *min) {
+		return getNodesNumberBetweenMinMax(root->right, min, max);
+	}
+	else {
+		return getNodesNumberBetweenMinMax(root->left, min, max);
+	}
+}
+
+template<class T>
+inline void AVLTree<T>::InorderMinMaxAux(Node<T>* root, T** arr, int& i, T* min, T* max)
+{
+	if (!root) {
+		return;
+	}
+	if (*(root->data) == *min && *(root->data) == *max) {
+		arr[i] = (root->data);
+		i++;
+	}
+	if ((*(root->data) < *max || *(root->data) == *max) && (*(root->data) > *min || *(root->data) == *min)) {
+		arr[i] = (root->data);
+		i++;
+		InorderMinMaxAux(root->left, arr, i, min, max);
+		InorderMinMaxAux(root->right, arr, i, min, max);
+	}
+	else if (*(root->data) < *min) {
+		arr[i] = (root->data);
+		i++;
+		InorderMinMaxAux(root->right, arr, i, min, max);
+	}
+	else {
+		arr[i] = (root->data);
+		i++;
+		InorderMinMaxAux(root->left, arr, i, min, max);
+	}
+}
+
+template<class T>
 inline void AVLTree<T>::mergeArray(T** arr1, int size1, T** arr2, int size2, T** newArr)
 {
 	int i = 0, j = 0, k = 0;
@@ -315,12 +366,12 @@ template<class T>
 inline Node<T>* AVLTree<T>::insert(Node<T>* root , T* data)
 {
 	if (root == nullptr) {
-		root = new Node<T>(*data);
+		Node<T>* new_root = new Node<T>(*data);
 		NodesNumber++;
 		if (_root == nullptr) {
-			_root = root;
+			_root = new_root;
 		}
-		return root;
+		return new_root;
 	}
 
 	if (root && (*(root->data) > *data)) {
@@ -334,6 +385,7 @@ inline Node<T>* AVLTree<T>::insert(Node<T>* root , T* data)
 	}
 
 	root = balanceTree(root);
+	_root = root;
 	return root;
 }
 
@@ -382,6 +434,13 @@ inline void AVLTree<T>::fillArrayMaxToMinInTree(T* arr[])
 }
 
 template<class T>
+inline void AVLTree<T>::InorderMinMax(T* arr[], T* min, T* max)
+{
+	int i = 0;
+	InorderMinMaxAux(_root, arr, i, min, max);
+}
+
+template<class T>
 inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 {
 	if (root == nullptr) {
@@ -422,6 +481,7 @@ inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 	}
 
 	root = balanceTree(root);
+	_root = root;
 	return root;
 }
 
@@ -437,7 +497,7 @@ inline Node<T>* AVLTree<T>::getMax(Node<T>* root)
 template<class T>
 inline int AVLTree<T>::getNodesNumber()
 {
-	return NodesNumber;;
+	return NodesNumber;
 }
 
 /*

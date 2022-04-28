@@ -85,16 +85,18 @@ StatusType GetHighestEarnerInEachCompany(void* DS, int NumOfCompanies, int** Emp
 	if (DS == NULL) return INVALID_INPUT;
 	return ((SystemManager*)DS)->GetHighestEarnerInEachCompany(NumOfCompanies, Employees);
 }
-/*
+
 StatusType GetNumEmployeesMatching(void* DS, int CompanyID, int MinEmployeeID, int MaxEmployeeId, int MinSalary, int MinGrade, int* TotalNumOfEmployees, int* NumOfEmployees)
 {
 	if (DS == NULL) return INVALID_INPUT;
 	return ((SystemManager*)DS)->GetNumEmployeesMatching(CompanyID, MinEmployeeID, MaxEmployeeId, MinSalary,
 		MinGrade, TotalNumOfEmployees, NumOfEmployees);
 }
-*/
+
 void Quit(void** DS)
 {
+	delete ((SystemManager*)*DS);
+	*DS = nullptr;
 }
 
 

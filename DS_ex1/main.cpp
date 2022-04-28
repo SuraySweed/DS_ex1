@@ -126,7 +126,7 @@ if ( (read_parameters)!=(required_parameters) ) { printf(ErrorString); return er
     static errorType OnGetHighestEarner(void** DS, const char* const command);
     static errorType OnGetAllEmployeesBySalary(void** DS, const char* const command);
     static errorType OnGetHighestEarnerInEachCompany(void** DS, const char* const command);
-    //static errorType OnGetNumEmployeesMatching(void** DS, const char* const command);
+    static errorType OnGetNumEmployeesMatching(void** DS, const char* const command);
     static errorType OnQuit(void** DS, const char* const command);
 
     /* On-Command Function Pointers */
@@ -146,7 +146,7 @@ if ( (read_parameters)!=(required_parameters) ) { printf(ErrorString); return er
         OnGetHighestEarner,
         OnGetAllEmployeesBySalary,
         OnGetHighestEarnerInEachCompany,
-        //OnGetNumEmployeesMatching,
+        OnGetNumEmployeesMatching,
         OnQuit
     };
 
@@ -438,7 +438,7 @@ if ( (read_parameters)!=(required_parameters) ) { printf(ErrorString); return er
     /************************************************************************/
     /* OnGetNumEmployeesMatching                                            */
     /************************************************************************/
-    /*
+    
     static errorType OnGetNumEmployeesMatching(void** DS, const char* const command) {
         int CompanyID, MinEmployeeID, MaxEmployeeId, MinSalary, MinGrade, TotalNumOfEmployees, NumOfEmployees;
         ValidateRead(sscanf(command, "%d %d %d %d %d", &CompanyID, &MinEmployeeID, &MaxEmployeeId, &MinSalary, &MinGrade), 5, "GetNumEmployeesMatching failed.\n");
@@ -451,7 +451,7 @@ if ( (read_parameters)!=(required_parameters) ) { printf(ErrorString); return er
         }
         return error_free;
     }
-    */
+    
 
 #ifdef __cplusplus
 }
