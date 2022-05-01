@@ -103,22 +103,27 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	//get the employees pionters
 	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
 	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
-	CompanyData CD(ESD_ptr->getEmployerID(), 0);
-	CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
+	//CompanyData CD(ESD_ptr->getEmployerID(), 0);
+	//CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
 	ActiveCompaniesData ACD(ESD_ptr->getEmployerID());
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	int numOfEmployeesInCompany = ACD_ptr->getNumberOfEmployees();
+	int salary = ESD_ptr->getSalary();
 
 	//remove from employees trees
 	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
 	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
-	if (!ACD_ptr->removeEmployee(EmployeeID, ESD_ptr->getSalary())) {
+	if (!ACD_ptr->removeEmployee(EmployeeID, salary)) {
 		return FAILURE;
 	}
-	//ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployees().getMax(ACD_ptr->getActiveCompanyEmployees().getRoot())->data);
-
+	numOfEmployeesInCompany--;
 	//check if the company has no employees
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
 		activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
+	}
+	else {
+		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
+			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	}
 	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 	numberOfEmployees--;
@@ -194,7 +199,46 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 
 	if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID))
 		return FAILURE;
+
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	int old_salary = EID_ptr->getSalary();
+	int employerID = EID_ptr->getEmployerID();
+	int grade = EID_ptr->getGrade();
+	int new_salary = old_salary + SalaryIncrease;
+
+	if (BumpGrade > 0) {
+		grade += 1;
+	}
+
+	if (RemoveEmployee(EmployeeID) == SUCCESS) {
+		EmployeeIdData new_EID(EmployeeID, employerID, new_salary, grade);
+		EmployeeSalaryData new_ESD(EmployeeID, employerID, new_salary, grade);
+		ActiveCompaniesData ACD(employerID);
+		ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+		employeesTreeByID.insert(employeesTreeByID.getRoot(), &new_EID);
+		employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &new_ESD);
+		ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &new_EID);
+		ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &new_ESD);
+		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
+		highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
+
+		return SUCCESS;
+	}
+
+	return FAILURE;
+	/*
+	EmployeeIdData new_EID(EmployeeID, employerID, new_salary, grade);
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), &EID);
+	employeesTreeByID.insert(employeesTreeByID.getRoot(), &new_EID);
+	EmployeeIdData* newEID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), new_EID)->data;
+
+	EmployeeSalaryData ESD(EmployeeID, 0, old_salary, 0);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), &ESD);
+	EmployeeSalaryData new_ESD(EmployeeID, employerID, new_salary, grade);
+	employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &new_ESD);
+
+
+	------------
 	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
 	EID_ptr->setSalary(EID_ptr->getSalary() + SalaryIncrease);
 	if (BumpGrade > 0)
@@ -212,14 +256,14 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	EmployeeIdData* EIDInCompany_ptr = ACD_ptr->getActiveCompanyEmployeesByID().find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
 	EIDInCompany_ptr->setSalary(EIDInCompany_ptr->getSalary() + SalaryIncrease);
-
+	
 	if (BumpGrade > 0) {
 		ESD_ptr->setGrade(ESD_ptr->getGrade() + 1);
 		EIDInCompany_ptr->setGrade(EIDInCompany_ptr->getGrade() + 1);
 		ESDInCompany_ptr->setGrade(ESDInCompany_ptr->getGrade() + 1);
 	}
-
 	return SUCCESS;
+	*/
 }
 
 StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
@@ -407,34 +451,36 @@ StatusType SystemManager::GetAllEmployeesBySalary(int CompanyID, int** Employees
 		//AVLTree<EmployeeSalaryData> employeersDataInComopany = ACD_ptr->getActiveCompanyEmployeesBySalary();
 		EmployeeSalaryData** EmployeesInCompany = new EmployeeSalaryData * [ACD_ptr->getNumberOfEmployees()];
 		//O(logk)
-		ACD_ptr->getActiveCompanyEmployeesBySalary().fillArrayMaxToMinInTree(EmployeesInCompany);
+		ACD_ptr->getActiveCompanyEmployeesBySalary().fillArray(EmployeesInCompany);
 		
-		int* employeesID_arr = new int[ACD_ptr->getNumberOfEmployees()];
+		int* employeesID_arr = new int[ACD_ptr->getNumberOfEmployees()]{ 0 };
 		//int* employeesID_arr = (int*)malloc(ACD_ptr->getNumberOfEmployees() * sizeof(int));
 		//O(NcompaniesID)
-		for (int i = 0; i < ACD_ptr->getNumberOfEmployees(); i++) {
+		for (int i = ACD_ptr->getNumberOfEmployees() - 1; i >= 0; i--) {
 			employeesID_arr[i] = EmployeesInCompany[i]->getEmployeeID();
 		}
 
 		*Employees = employeesID_arr;
 		delete[] EmployeesInCompany;
-		
+		//delete[] employeesID_arr;
 		return SUCCESS;
 	}
 	if (CompanyID < 0) {
-		if (numberOfEmployees < 0) {
+		if (numberOfEmployees == 0) {
 			return FAILURE;
 		}
 		*NumOfEmployees = numberOfEmployees;
 		EmployeeSalaryData** all_employees = new EmployeeSalaryData * [numberOfEmployees];
 		employeesTreeBySalary.fillArray(all_employees);
-		int* employeesID_arr = (int*)malloc(numberOfEmployees * sizeof(int));
+		int* employeesID_arr2 = (int*)malloc(numberOfEmployees * sizeof(int));
+		//int* companies_arr = (int*)malloc(NumOfCompanies * (sizeof(int)));
 		//O(n)
 		for (int i = numberOfEmployees - 1; i >= 0; i--) {
-			employeesID_arr[i] = all_employees[i]->getEmployeeID();
+			employeesID_arr2[i] = all_employees[i]->getEmployeeID();
+			//*Employees[i] = all_employees[i]->getEmployeeID();
 		}
 		delete[] all_employees;
-		*Employees = employeesID_arr;
+		*Employees = employeesID_arr2;
 		return SUCCESS;
 	}
 	return FAILURE;

@@ -177,7 +177,7 @@ inline Node<T>* AVLTree<T>::findMinNodeInSubTree(Node<T>* subTreeRoot)
 }
 
 template<class T>
-inline AVLTree<T>::AVLTree() : _root(nullptr), NodesNumber(0) {}
+inline AVLTree<T>::AVLTree() : _root(nullptr), NodesNumber(1) {}
 
 template<class T>
 inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree) = default;
@@ -395,7 +395,7 @@ inline Node<T>* AVLTree<T>::find(Node<T>* root, const T& data)
 	if (root) {
 		if (*(root->data) == data)
 			return root;
-		else if (data < *(root->data))
+		else if (*(root->data) > data)
 			return find(root->left, data);
 		else
 			return find(root->right, data);
@@ -444,6 +444,7 @@ template<class T>
 inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 {
 	if (root == nullptr) {
+		NodesNumber--;
 		return root;
 	}
 
@@ -466,12 +467,14 @@ inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 			else {
 				*(root) = *(temp);
 			}
+			NodesNumber--;
 			delete temp;
 		}
 		else {
 			Node<T>* temp = findMinNodeInSubTree(root->right);
 			*(root->data) = *(temp->data);
 			root->right = remove(root->right, temp->data);
+			NodesNumber--;
 		}
 	}
 
@@ -479,7 +482,6 @@ inline Node<T>* AVLTree<T>::remove(Node<T>* root, T* data)
 		NodesNumber--;
 		return root;
 	}
-
 	root = balanceTree(root);
 	_root = root;
 	return root;
