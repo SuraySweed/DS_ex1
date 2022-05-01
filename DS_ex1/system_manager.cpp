@@ -472,8 +472,8 @@ StatusType SystemManager::GetAllEmployeesBySalary(int CompanyID, int** Employees
 		*NumOfEmployees = numberOfEmployees;
 		EmployeeSalaryData** all_employees = new EmployeeSalaryData * [numberOfEmployees];
 		employeesTreeBySalary.fillArray(all_employees);
-		int* employeesID_arr2 = (int*)malloc(numberOfEmployees * sizeof(int));
-		//int* companies_arr = (int*)malloc(NumOfCompanies * (sizeof(int)));
+		//int* employeesID_arr2 = (int*)malloc(numberOfEmployees * sizeof(int));
+		int* employeesID_arr2 = new int[numberOfEmployees];
 		//O(n)
 		for (int i = numberOfEmployees - 1; i >= 0; i--) {
 			employeesID_arr2[i] = all_employees[i]->getEmployeeID();
