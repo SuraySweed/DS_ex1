@@ -17,7 +17,7 @@ private:
 public:
 	ActiveCompaniesData(int company_id);
 	ActiveCompaniesData(const ActiveCompaniesData& active_companies_data);
-	~ActiveCompaniesData();
+	~ActiveCompaniesData() = default;
 
 	AVLTree<EmployeeIdData>& getActiveCompanyEmployeesByID() { return employeesByID; }
 	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployeesBySalary() { return employeesBySalary; }

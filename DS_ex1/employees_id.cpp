@@ -6,9 +6,9 @@ EmployeeIdData::EmployeeIdData(int employeeID, int employerID, int salary, int g
 EmployeeIdData::EmployeeIdData(const EmployeeIdData& employeeIdData) :
 	employee_id(employeeIdData.employee_id), employer_id(employeeIdData.employer_id),
 	salary(employeeIdData.salary), grade(employeeIdData.grade) {}
-
+/*
 EmployeeIdData::~EmployeeIdData() {}
-
+*/
 EmployeeIdData& EmployeeIdData::operator=(const EmployeeIdData& emploee_id_data)
 {
 	if (this == &emploee_id_data) {
