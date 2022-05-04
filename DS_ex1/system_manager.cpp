@@ -128,12 +128,13 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 	int salary = ESD_ptr->getSalary();
 
-	//remove from employees trees
-	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
-	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
 	if (!ACD_ptr->removeEmployee(EmployeeID, salary)) {
 		return FAILURE;
 	}
+	//remove from employees trees
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
+	
 	//check if the company has no employees
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
 		activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
