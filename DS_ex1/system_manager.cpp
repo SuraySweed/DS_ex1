@@ -118,22 +118,37 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID)) {
 		return FAILURE;
 	}
-	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	Node<EmployeeIdData>* EIN_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID);
 	//get the employees pionters
-	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
-	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+	EmployeeSalaryData ESD(EmployeeID, 0, (EIN_ptr->data)->getSalary(), 0);
+	Node<EmployeeSalaryData>* ESN_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD);
 	//CompanyData CD(ESD_ptr->getEmployerID(), 0);
 	//CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
-	ActiveCompaniesData ACD(ESD_ptr->getEmployerID());
+	ActiveCompaniesData ACD((ESN_ptr->data)->getEmployerID());
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-	int salary = ESD_ptr->getSalary();
+	int salary = (ESN_ptr->data)->getSalary();
 
 	if (!ACD_ptr->removeEmployee(EmployeeID, salary)) {
 		return FAILURE;
 	}
 	//remove from employees trees
-	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
-	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
+	if (EIN_ptr->left && EIN_ptr->right) {
+		Node<EmployeeIdData>* tmpID_ptr = employeesTreeByID.findMinNodeInSubTree(EIN_ptr);
+		ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
+		EmployeeIdData* tmpEID_ptr = tmpCompany1->getActiveCompanyEmployeesByID().
+			find(tmpCompany1->getActiveCompanyEmployeesByID().getRoot(), *(tmpID_ptr->data))->data;
+		tmpEID_ptr->setEmployeePtrByID(EIN_ptr);
+	}
+	if (ESN_ptr->left && ESN_ptr->right) {
+		Node<EmployeeSalaryData>* tmpSalary_ptr = employeesTreeBySalary.findMinNodeInSubTree(ESN_ptr);
+		ActiveCompaniesData* tmpCompany2 = activeCompaniesTree.find(activeCompaniesTree.getRoot(), tmpSalary_ptr->data->getEmployerID())->data;
+		EmployeeIdData EID_tmp(tmpSalary_ptr->data->getEmployeeID(), 0, 0, 0);
+		EmployeeIdData* tmpEID_ptr2 = tmpCompany2->getActiveCompanyEmployeesByID().
+			find(tmpCompany2->getActiveCompanyEmployeesByID().getRoot(), EID_tmp)->data;
+		tmpEID_ptr2->setEmploeePtrBySalary(ESN_ptr);
+	}
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), EIN_ptr->data);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESN_ptr->data);
 	
 	//check if the company has no employees
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
@@ -563,11 +578,11 @@ StatusType SystemManager::GetNumEmployeesMatching(int CompanyID, int MinEmployee
 
 			*NumOfEmployees = 0;
 			if (*TotalNumOfEmployees) {
-				EmployeeIdData** employeesID_arr = new EmployeeIdData * [*TotalNumOfEmployees];
+				EmployeeIdData** employeesID_arr = new EmployeeIdData * [ACD_ptr->getNumberOfEmployees()];
 				ACD_ptr->getActiveCompanyEmployeesByID().InorderMinMax(employeesID_arr, &minID, &maxID);
 
 				for (int i = 0; i < *TotalNumOfEmployees; i++) {
-					if ((employeesID_arr[i]->getSalary() > MinSalary) && (employeesID_arr[i]->getGrade() > MinGrade)) {
+					if ((employeesID_arr[i]->getSalary() >= MinSalary) && (employeesID_arr[i]->getGrade() >= MinGrade)) {
 						(*NumOfEmployees)++;
 					}
 				}

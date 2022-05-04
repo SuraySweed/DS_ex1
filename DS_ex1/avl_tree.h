@@ -29,7 +29,6 @@ private:
 	Node<T>* leftRotate(Node<T>* root);
 	Node<T>* balanceTree(Node<T>* root);
 	//Node<T>* auxInsert(Node<T>* root, Node<T>* newNode);
-	Node<T>* findMinNodeInSubTree(Node<T>* subTreeRoot);
 	//void auxRemove(Node<T>* root, Node<T>* node);
 	void auxInorder(Node<T>* root, int& k, T** arr, int& i);
 	void inorderArray(Node<T>* root, T** arr, int& i);
@@ -62,6 +61,7 @@ public:
 	Node<T>* remove(Node<T>* root, T* data);
 	Node<T>* getMax(Node<T>* root);
 	int getNodesNumber();
+	Node<T>* findMinNodeInSubTree(Node<T>* subTreeRoot);
 	//T* inorder(Node<T>* root, int num, T* arr[]);
 };
 
