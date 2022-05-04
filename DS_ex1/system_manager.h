@@ -18,6 +18,7 @@ private:
 	int numberOfEmployees;
 	int numberOfCompanies;
     EmployeeSalaryData* highestSalaryAll;
+    void updateEmployerIDInCompany(Node<EmployeeIdData>* root, int companyID);
 
 public:
 	SystemManager();

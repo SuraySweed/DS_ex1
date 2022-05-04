@@ -2,6 +2,8 @@
 #define EMPLOYEES_ID_H
 
 #include <iostream>
+#include "avl_tree.h"
+#include "employees_salary.h"
 
 class EmployeeIdData {
 private:
@@ -9,19 +11,25 @@ private:
 	int employer_id;
 	int salary;
 	int grade;
+	Node<EmployeeIdData>* employeePtrInAllIDTree;
+	Node<EmployeeSalaryData>* employeePtrInAllSalaryTree;
 
 public:
 	EmployeeIdData(int employeeID, int employerID, int salary, int grade);
 	EmployeeIdData(const EmployeeIdData& employeeIdData);
-	~EmployeeIdData() = default;
+	~EmployeeIdData();
 	EmployeeIdData& operator=(const EmployeeIdData&);
 	int getEmployerID() { return employer_id; }
 	int getSalary() { return salary; }
 	int getGrade() { return grade; }
+	Node<EmployeeIdData>* getEmployeePtrByID() { return employeePtrInAllIDTree; }
+	Node<EmployeeSalaryData>* getEmploeePtrBySalary() { return employeePtrInAllSalaryTree; }
 	
 	void setSalary(int newSalary) { salary = newSalary; }
 	void setGrade(int newGrade) { grade = newGrade; }
 	void setEmployerID(int newCompanyID) { employer_id = newCompanyID; }
+	void setEmployeePtrByID(Node<EmployeeIdData>* node) { employeePtrInAllIDTree = node; }
+	void setEmploeePtrBySalary(Node<EmployeeSalaryData>* node) { employeePtrInAllSalaryTree = node; }
 
 	bool operator<(const EmployeeIdData& other) const;
 	bool operator>(const EmployeeIdData& other) const;

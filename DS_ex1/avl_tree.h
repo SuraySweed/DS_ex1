@@ -38,11 +38,13 @@ private:
 	void mergeArray(T** arr1, int size1, T** arr2, int size2, T** newArr);
 	Node<T>* doMergerTree(T** arr1, int size1, T** arr2, int size2, T** newArr);
 	Node<T>* auxBuildTree(int left, int right, Node<T>* root, T** newArr);
+	Node<T>* copyNodes(Node<T>* root);
 	void deleteTree(Node<T>* root);
 
 public:
 	AVLTree<T>();
 	AVLTree<T>(const AVLTree<T>& avlTree);
+	AVLTree<T>& operator=(const AVLTree<T>& root);
 	~AVLTree();
 
 	int getHeight(Node<T>* node);
@@ -180,7 +182,11 @@ template<class T>
 inline AVLTree<T>::AVLTree() : _root(nullptr), NodesNumber(0) {}
 
 template<class T>
-inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree) = default;
+inline AVLTree<T>::AVLTree(const AVLTree<T>& avlTree)
+{
+	_root = copyNodes(avlTree._root);
+	this->NodesNumber = avlTree.NodesNumber;
+}
 
 
 template<class T>
@@ -324,6 +330,19 @@ inline Node<T>* AVLTree<T>::auxBuildTree(int left, int right, Node<T>* root, T**
 }
 
 template<class T>
+inline Node<T>* AVLTree<T>::copyNodes(Node<T>* root)
+{
+	if (root) {
+		Node<T>* left = copyNodes(root->left);
+		Node<T>* right = copyNodes(root->right);
+		return new Node<T>(root->data);
+	}
+	else {
+		return nullptr;
+	}
+}
+
+template<class T>
 inline void AVLTree<T>::deleteTree(Node<T>* root)
 {
 	if (root == NULL)
@@ -331,6 +350,17 @@ inline void AVLTree<T>::deleteTree(Node<T>* root)
 	deleteTree(root->left);
 	deleteTree(root->right);
 	delete root;
+}
+
+template<class T>
+inline AVLTree<T>& AVLTree<T>::operator=(const AVLTree<T>& root)
+{
+	if (this != &root) {
+		AVLTree temp(root);
+		_root = temp._root;
+		NodesNumber = temp.NodesNumber;
+	}
+	return *this;
 }
 
 template<class T>
