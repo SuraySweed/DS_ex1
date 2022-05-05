@@ -24,9 +24,9 @@ EmployeeSalaryData& EmployeeSalaryData::operator=(EmployeeSalaryData& employee_s
 	employee_id = employee_salary_data.employee_id;
 	salary = employee_salary_data.salary;
 	grade = employee_salary_data.grade;
-	delete this->employer_id;
+	//delete this->employer_id;
 	this->employer_id = employee_salary_data.employer_id;
-	employee_salary_data.employer_id = nullptr;
+	//employee_salary_data.employer_id = nullptr;
 	return *this;
 }
 

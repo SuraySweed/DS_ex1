@@ -24,9 +24,9 @@ EmployeeIdData& EmployeeIdData::operator=(EmployeeIdData& employee_id_data)
 	employee_id = employee_id_data.employee_id;
 	salary = employee_id_data.salary;
 	grade = employee_id_data.grade;
-	delete this->employer_id;
-	this->employer_id = employee_id_data.employer_id;
-	employee_id_data.employer_id = nullptr;
+	//delete this->employer_id;
+	(this->employer_id) = (employee_id_data.employer_id);
+	//employee_id_data.employer_id = nullptr;
 
 	return *this;
 }
