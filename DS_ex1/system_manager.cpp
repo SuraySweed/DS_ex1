@@ -150,7 +150,9 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	}
 
 	// remove from the big trees
+	EID_ptr->setEmployerIDPtr(nullptr);
 	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
+	ESD_ptr->setEmployerIDPtr(nullptr);
 	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
 	
 	//check if the company has no employees
@@ -345,12 +347,12 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 
 	return SUCCESS;
 }
-
+// problem here
 StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Factor)
 {
 	if (AcquirerID <= 0 || TargetID <= 0 || TargetID == AcquirerID || Factor < 1.00)
 		return INVALID_INPUT;
-
+	
 	//updates in companyTreeByID
 	CompanyData acquirerCD(AcquirerID,0);	
 	CompanyData targetCD(TargetID, 0);

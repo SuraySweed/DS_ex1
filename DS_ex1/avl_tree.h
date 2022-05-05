@@ -334,8 +334,8 @@ template<class T>
 inline Node<T>* AVLTree<T>::copyNodes(Node<T>* root)
 {
 	if (root) {
-		Node<T>* left = copyNodes(root->left);
-		Node<T>* right = copyNodes(root->right);
+		copyNodes(root->left);
+		copyNodes(root->right);
 		return new Node<T>(root->data);
 	}
 	else {

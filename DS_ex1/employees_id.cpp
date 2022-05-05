@@ -7,14 +7,13 @@ EmployeeIdData::EmployeeIdData(const EmployeeIdData& employeeIdData) :
 	employee_id(employeeIdData.employee_id), employer_id(new int(*(employeeIdData.employer_id))),
 	salary(employeeIdData.salary), grade(employeeIdData.grade) {}
 
-EmployeeIdData::~EmployeeIdData() = default;
-/*
+EmployeeIdData::~EmployeeIdData()// = default;
 {
-	if (employer_id) {
+	if (employer_id && *employer_id > 0) {
 		delete employer_id;
-		employer_id = nullptr;
 	}
-}*/
+	employer_id = nullptr;
+}
 
 EmployeeIdData& EmployeeIdData::operator=(EmployeeIdData& employee_id_data)
 {
