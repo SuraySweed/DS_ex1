@@ -9,7 +9,7 @@ EmployeeIdData::EmployeeIdData(const EmployeeIdData& employeeIdData) :
 
 EmployeeIdData::~EmployeeIdData()// = default;
 {
-	if (employer_id && *employer_id > 0) {
+	if (employer_id) {
 		delete employer_id;
 	}
 	employer_id = nullptr;
