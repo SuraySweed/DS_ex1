@@ -283,8 +283,8 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 	ActiveCompaniesData ACD(NewCompanyID);
 
 	if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID) ||
-		!companiesTreeByID.find(companiesTreeByID.getRoot(), CD) ||
-		!activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
+		!companiesTreeByID.find(companiesTreeByID.getRoot(), CD)) { //||
+		// || !activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		return FAILURE;
 	}
 

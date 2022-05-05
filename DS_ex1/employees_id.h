@@ -11,7 +11,7 @@ private:
 	int employer_id;
 	int salary;
 	int grade;
-	Node<EmployeeIdData>* employeePtrInAllIDTree;//i hate you
+	Node<EmployeeIdData>* employeePtrInAllIDTree;
 	Node<EmployeeSalaryData>* employeePtrInAllSalaryTree;
 
 public:
