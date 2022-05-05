@@ -4,7 +4,6 @@
 #include "avl_tree.h"
 #include "employees_id.h"
 #include "employees_salary.h"
-#include "active_employees.h"
 
 class ActiveCompaniesData {
 private:

@@ -8,9 +8,7 @@
 class CompanyData {
 private:
 	int company_id;
-	//int employees_number;
 	int value;
-	//AVLTree<EmployeeIdData> company_employees; 
 
 public:
 	CompanyData(int companyID, int value);
@@ -18,15 +16,10 @@ public:
 	~CompanyData();
 	CompanyData& operator=(const CompanyData&);
 
-	//AVLTree<EmployeeIdData>& getEmployeesTreeInCompany() { return company_employees; }
-	//void incEmployeesNumber() { employees_number++; }
 	int getCompanyID() { return company_id; }
 	int getValue() { return value; }
-	//int getEmployeesNumber() { return employees_number; }
 	int getCompanyValue() { return value; }
 	void setValue(int newValue) { value = newValue; }
-
-	//void removeEmployee(int employeeID);
 
 	bool operator<(const CompanyData& other) const;
 	bool operator>(const CompanyData& other) const;

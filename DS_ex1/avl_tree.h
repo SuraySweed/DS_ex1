@@ -3,11 +3,12 @@
 
 #include <iostream>
 
+
 template <class T>
 class Node {
 public:
 	Node(const T& data_t);
-	Node(T* data) : data(data), left(nullptr), right(nullptr) {}
+	Node(T* data) : data(new T(*data)), left(nullptr), right(nullptr) {}
 	//Node(const T& data_t, Node<T>* parent, Node<T>* left, Node<T>* right, int height);
 	Node(const Node<T>& node);
 	Node<T>& operator=(const Node<T>& node);
@@ -529,16 +530,5 @@ inline int AVLTree<T>::getNodesNumber()
 	return NodesNumber;
 }
 
-/*
-template<class T>
-inline bool AVLTree<T>::remove(const T& data)
-{
-	Node<T>* node = find(_root, data);
-	if (!_root || !node)
-		return false;
-	else
-		auxRemove(_root, node);
-	return true;
-}*/
 
 #endif

@@ -1,15 +1,25 @@
 #include "system_manager.h"
 #include "library1.h"
 
-void SystemManager::updateEmployerIDInCompany(Node<EmployeeIdData>* root, int companyID)
+
+void SystemManager::updateEmployerIDByIDInCompany(Node<EmployeeIdData>* root, int companyID)
 {
 	if (!root) return;
 
-	updateEmployerIDInCompany(root->left, companyID);
-	root->data->getEmployeePtrByID()->data->setEmployerID(companyID);
-	root->data->getEmploeePtrBySalary()->data->setEmployerID(companyID);
-	updateEmployerIDInCompany(root->right, companyID);
+	updateEmployerIDByIDInCompany(root->left, companyID);
+	root->data->setEmployerID(companyID);
+	updateEmployerIDByIDInCompany(root->right, companyID);
 }
+
+void SystemManager::updateEmployerIDBySalaryInCompany(Node<EmployeeSalaryData>* root, int companyID)
+{
+	if (!root) return;
+
+	updateEmployerIDBySalaryInCompany(root->left, companyID);
+	root->data->setEmployerID(companyID);
+	updateEmployerIDBySalaryInCompany(root->right, companyID);
+}
+
 
 SystemManager::SystemManager() : employeesTreeByID(AVLTree<EmployeeIdData>()),
 	employeesTreeBySalary(AVLTree<EmployeeSalaryData>()), companiesTreeByID(AVLTree<CompanyData>()), 
@@ -23,8 +33,9 @@ SystemManager::SystemManager(const SystemManager& system_manager) :
 	numberOfEmployees(system_manager.numberOfEmployees), numberOfCompanies(system_manager.numberOfCompanies), 
 	highestSalaryAll(new EmployeeSalaryData(*(system_manager.highestSalaryAll))) {}
 
+/*
 SystemManager::~SystemManager() {}
-
+*/
 StatusType SystemManager::AddCompany(int CompanyID, int Value)
 {
 	if (CompanyID <= 0 || Value <= 0) {
@@ -50,42 +61,49 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 		return INVALID_INPUT;
 	}
 
+	//int* companyID_ptr = new int(CompanyID);
+
 	EmployeeIdData EID(EmployeeID, CompanyID, Salary, Grade);
 	CompanyData CD(CompanyID, 0); 
-	EmployeeSalaryData ESD(EmployeeID, CompanyID, Salary, Grade); 
+	EmployeeSalaryData ESD(EmployeeID, CompanyID, Salary, Grade);
 
+	// if employee is existed in the id and salary trees
 	if (employeesTreeByID.find(employeesTreeByID.getRoot(), EID) ||
 		!companiesTreeByID.find(companiesTreeByID.getRoot(), CD)) {
+		//delete companyID_ptr;
 		return FAILURE;
 	}
 
+	// if companyID not in active tree, insert it
 	ActiveCompaniesData ACD(CompanyID);
 	if (!activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		activeCompaniesTree.insert(activeCompaniesTree.getRoot(), &ACD);
 	}
+
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-	employeesTreeByID.insert(employeesTreeByID.getRoot(), &EID);
-	Node<EmployeeIdData>* employeeID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID);
-	employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &ESD);
-	Node<EmployeeSalaryData>* employeeSalary_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD);
-	ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &EID);
-	Node<EmployeeIdData>* activeEmployeeID_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-		find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID);
-	Node<EmployeeSalaryData>* activeEmployeeSalary_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
-		insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &ESD);
+	if (employeesTreeByID.insert(employeesTreeByID.getRoot(), &EID) &&
+		employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &ESD) &&
+		ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &EID) &&
+		ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &ESD)) {
+				
+		EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+		EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+		EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
+			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
+		EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
+			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
 
+		EID_active_ptr->setEmployerIDPtr(EID_ptr->getEmployerID());
+		ESD_active_ptr->setEmployerIDPtr(ESD_ptr->getEmployerID());
 
-	if (employeeID_ptr && employeeSalary_ptr && activeEmployeeID_ptr && activeEmployeeSalary_ptr) {
-		activeEmployeeID_ptr->data->setEmployeePtrByID(employeeID_ptr);
-		activeEmployeeID_ptr->data->setEmploeePtrBySalary(employeeSalary_ptr);
 		numberOfEmployees++;
 		ACD_ptr->incNumberOfEmployees(); //for specific company
 		highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 	}
-	
+
 	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 		getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
-
+	
 	return SUCCESS;
 }
 
@@ -113,66 +131,27 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	if (EmployeeID <= 0)
 		return INVALID_INPUT;
 
-	//check if employee exist
+	//check if the employee exist
 	EmployeeIdData EID(EmployeeID, 0, 0, 0);
 	if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID)) {
 		return FAILURE;
 	}
-	Node<EmployeeIdData>* EIN_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID);
-	//get the employees pionters
-	EmployeeSalaryData ESD(EmployeeID, 0, (EIN_ptr->data)->getSalary(), 0);
-	Node<EmployeeSalaryData>* ESN_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD);
-	//CompanyData CD(ESD_ptr->getEmployerID(), 0);
-	//CompanyData* CD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), CD)->data;
-	ActiveCompaniesData ACD((ESN_ptr->data)->getEmployerID());
-	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-	int salary = (ESN_ptr->data)->getSalary();
 
+	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
+	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+	ActiveCompaniesData ACD(*(EID_ptr->getEmployerID()));
+	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	int salary = ESD_ptr->getSalary();
+
+	// remove employee from the active company
 	if (!ACD_ptr->removeEmployee(EmployeeID, salary)) {
 		return FAILURE;
 	}
-	//remove from employees trees
 
-	if (!EIN_ptr->left || !EIN_ptr->right) {
-		Node<EmployeeIdData>* tmpID_ptr = EIN_ptr->left ? EIN_ptr->left : EIN_ptr->right;
-		if(tmpID_ptr) {
-			ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.
-				find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
-			EmployeeIdData* tmpEID_ptr = tmpCompany1->getActiveCompanyEmployeesByID().
-				find(tmpCompany1->getActiveCompanyEmployeesByID().getRoot(), *(tmpID_ptr->data))->data;
-			tmpEID_ptr->setEmployeePtrByID(EIN_ptr);
-		}
-	}
-	if (EIN_ptr->left && EIN_ptr->right) {
-		Node<EmployeeIdData>* tmpID_ptr = employeesTreeByID.findMinNodeInSubTree(EIN_ptr);
-		ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.
-			find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
-		EmployeeIdData* tmpEID_ptr = tmpCompany1->getActiveCompanyEmployeesByID().
-			find(tmpCompany1->getActiveCompanyEmployeesByID().getRoot(), *(tmpID_ptr->data))->data;
-		tmpEID_ptr->setEmployeePtrByID(EIN_ptr);
-	}
-	if (!ESN_ptr->left || !ESN_ptr->right) {
-		Node<EmployeeSalaryData>* tmpSalary_ptr = ESN_ptr->left ? ESN_ptr->left : ESN_ptr->right;
-		if (tmpSalary_ptr) {
-			ActiveCompaniesData* tmpCompany2 = activeCompaniesTree.
-				find(activeCompaniesTree.getRoot(), tmpSalary_ptr->data->getEmployerID())->data;
-			EmployeeIdData EID_tmp(tmpSalary_ptr->data->getEmployeeID(), 0, 0, 0);
-			EmployeeIdData* tmpEID_ptr2 = tmpCompany2->getActiveCompanyEmployeesByID().
-				find(tmpCompany2->getActiveCompanyEmployeesByID().getRoot(), EID_tmp)->data;
-			tmpEID_ptr2->setEmploeePtrBySalary(ESN_ptr);
-		}
-	}
-
-	if (ESN_ptr->left && ESN_ptr->right) {
-		Node<EmployeeSalaryData>* tmpSalary_ptr = employeesTreeBySalary.findMinNodeInSubTree(ESN_ptr);
-		ActiveCompaniesData* tmpCompany2 = activeCompaniesTree.find(activeCompaniesTree.getRoot(), tmpSalary_ptr->data->getEmployerID())->data;
-		EmployeeIdData EID_tmp(tmpSalary_ptr->data->getEmployeeID(), 0, 0, 0);
-		EmployeeIdData* tmpEID_ptr2 = tmpCompany2->getActiveCompanyEmployeesByID().
-			find(tmpCompany2->getActiveCompanyEmployeesByID().getRoot(), EID_tmp)->data;
-		tmpEID_ptr2->setEmploeePtrBySalary(ESN_ptr);
-	}
-	employeesTreeByID.remove(employeesTreeByID.getRoot(), EIN_ptr->data);
-	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESN_ptr->data);
+	// remove from the big trees
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
 	
 	//check if the company has no employees
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
@@ -182,6 +161,7 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	}
+
 	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 	numberOfEmployees--;
 
@@ -224,7 +204,7 @@ StatusType SystemManager::GetEmployeeInfo(int EmployeeID, int* EmployerID, int* 
 		return FAILURE;
 	}
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
-	*EmployerID = EID_ptr->getEmployerID();
+	*EmployerID = *(EID_ptr->getEmployerID());
 	*Salary = EID_ptr->getSalary();
 	*Grade = EID_ptr->getGrade();
 
@@ -259,7 +239,7 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
 	int old_salary = EID_ptr->getSalary();
-	int employerID = EID_ptr->getEmployerID();
+	int employerID = *(EID_ptr->getEmployerID());
 	int grade = EID_ptr->getGrade();
 	int new_salary = old_salary + SalaryIncrease;
 
@@ -268,27 +248,32 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 	}
 
 	if (RemoveEmployee(EmployeeID) == SUCCESS) {
+		//int* employerID_ptr = new int(employerID);
 		EmployeeIdData new_EID(EmployeeID, employerID, new_salary, grade);
 		EmployeeSalaryData new_ESD(EmployeeID, employerID, new_salary, grade);
 		ActiveCompaniesData ACD(employerID);
 		ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 
 		employeesTreeByID.insert(employeesTreeByID.getRoot(), &new_EID);
-		Node<EmployeeIdData>* employeeID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), new_EID);
 		employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &new_ESD);
-		Node<EmployeeSalaryData>* employeeSalary_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), new_ESD);
 		numberOfEmployees++;
-
 		ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &new_EID);
-		Node<EmployeeIdData>* activeEmployeeID_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), new_EID);
-		activeEmployeeID_ptr->data->setEmployeePtrByID(employeeID_ptr);
-		activeEmployeeID_ptr->data->setEmploeePtrBySalary(employeeSalary_ptr);
-
 		ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &new_ESD);
-		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
+		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
+			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 		highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 		ACD_ptr->incNumberOfEmployees();
+
+
+		EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), new_EID)->data;
+		EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), new_ESD)->data;
+		EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
+			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), new_EID)->data;
+		EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
+			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), new_ESD)->data;
+
+		EID_active_ptr->setEmployerIDPtr(EID_ptr->getEmployerID());
+		ESD_active_ptr->setEmployerIDPtr(ESD_ptr->getEmployerID());
 
 		return SUCCESS;
 	}
@@ -307,8 +292,7 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 	ActiveCompaniesData ACD(NewCompanyID);
 
 	if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID) ||
-		!companiesTreeByID.find(companiesTreeByID.getRoot(), CD)) { //||
-		// || !activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
+		!companiesTreeByID.find(companiesTreeByID.getRoot(), CD)) {
 		return FAILURE;
 	}
 
@@ -327,34 +311,28 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
 	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
 	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
-	int oldEmployerID = EID_ptr->getEmployerID();
+	int oldEmployerID = *(EID_ptr->getEmployerID());
+	//int* newCompany_ptr = new int(NewCompanyID);
 	EID_ptr->setEmployerID(NewCompanyID);
 	ESD_ptr->setEmployerID(NewCompanyID);
-	Node<EmployeeIdData>* employeeID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID);
-	Node<EmployeeSalaryData>* employeeSalary_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD);
 
 	//update employees trees in comapny
-	ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID_ptr);
-	Node<EmployeeIdData>* employeeIDNode_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-		find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID);
+	ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID_ptr);//
 	ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD_ptr);
 	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 		getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	ACD_ptr->incNumberOfEmployees();
 	
+
+	//remove the employee from the old company
 	ActiveCompaniesData old_ACD(oldEmployerID);
 	ActiveCompaniesData* old_ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), old_ACD)->data;
 	int salary = EID_ptr->getSalary();
-	//Node<EmployeeIdData>* oldEmployeeID_ptr = old_ACD_ptr->getActiveCompanyEmployeesByID()
-	//	.find(old_ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID);
-
-	employeeIDNode_ptr->data->setEmployeePtrByID(employeeID_ptr);
-	employeeIDNode_ptr->data->setEmploeePtrBySalary(employeeSalary_ptr);
-
 	old_ACD_ptr->removeEmployee(EmployeeID, salary);
 	if (old_ACD_ptr->getNumberOfEmployees() == 0) {
 		activeCompaniesTree.remove(activeCompaniesTree.getRoot(), old_ACD_ptr);
 	}
+
 
 	return SUCCESS;
 }
@@ -405,8 +383,9 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			acquirerACD_ptr->setNumberOfEmployees(targetACD_ptr->getNumberOfEmployees());
 			acquirerACD_ptr->setHighestSalary(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getMax
 				(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
-			updateEmployerIDInCompany(acquirerACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
-
+			updateEmployerIDByIDInCompany(acquirerACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
+			updateEmployerIDBySalaryInCompany(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
+			
 			activeCompaniesTree.remove(activeCompaniesTree.getRoot(), targetACD_ptr);
 		}
 		// merge two companies(target and acqure), and remove the target company
@@ -414,7 +393,8 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			ActiveCompaniesData* targetACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), targetACD)->data;
 			ActiveCompaniesData* acquirerACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), acquirerACD)->data;
 			
-			updateEmployerIDInCompany(targetACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
+			updateEmployerIDByIDInCompany(targetACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
+			updateEmployerIDBySalaryInCompany(targetACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
 
 			int target_employees_num = targetACD_ptr->getNumberOfEmployees();
 			EmployeeSalaryData** targetEmployeesSalary = new EmployeeSalaryData * [target_employees_num];

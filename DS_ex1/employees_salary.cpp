@@ -1,24 +1,32 @@
 #include "employees_salary.h"
 
 EmployeeSalaryData::EmployeeSalaryData(int employeeID, int employerID, int salary, int grade) :	
-	employee_id(employeeID), employer_id(employerID), salary(salary), grade(grade) {}
+	employee_id(employeeID), employer_id(new int(employerID)), salary(salary), grade(grade) {}
 
 EmployeeSalaryData::EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData) :
-	employee_id(EmployeeSalaryData.employee_id), employer_id(EmployeeSalaryData.employer_id),
+	employee_id(EmployeeSalaryData.employee_id), employer_id(new int(*(EmployeeSalaryData.employer_id))),
 	salary(EmployeeSalaryData.salary), grade(EmployeeSalaryData.grade) {}
 
-EmployeeSalaryData::~EmployeeSalaryData() {}
-
-EmployeeSalaryData& EmployeeSalaryData::operator=(const EmployeeSalaryData& emploee_salary_data)
+EmployeeSalaryData::~EmployeeSalaryData() = default;
+/*
 {
-	if (this == &emploee_salary_data) {
+	if (employer_id) {
+		delete employer_id;
+	}
+	employer_id = nullptr;
+}*/
+
+EmployeeSalaryData& EmployeeSalaryData::operator=(EmployeeSalaryData& employee_salary_data)
+{
+	if (this == &employee_salary_data) {
 		return *this;
 	}
-	employee_id = emploee_salary_data.employee_id;
-	employer_id = emploee_salary_data.employer_id;
-	salary = emploee_salary_data.salary;
-	grade = emploee_salary_data.grade;
-
+	employee_id = employee_salary_data.employee_id;
+	salary = employee_salary_data.salary;
+	grade = employee_salary_data.grade;
+	delete this->employer_id;
+	this->employer_id = employee_salary_data.employer_id;
+	employee_salary_data.employer_id = nullptr;
 	return *this;
 }
 

@@ -18,12 +18,13 @@ private:
 	int numberOfEmployees;
 	int numberOfCompanies;
     EmployeeSalaryData* highestSalaryAll;
-    void updateEmployerIDInCompany(Node<EmployeeIdData>* root, int companyID);
+    void updateEmployerIDByIDInCompany(Node<EmployeeIdData>* root, int companyID);
+    void updateEmployerIDBySalaryInCompany(Node<EmployeeSalaryData>* root, int companyID);
 
 public:
 	SystemManager();
 	SystemManager(const SystemManager& system_manager);
-    ~SystemManager();
+    ~SystemManager() = default;
 
     StatusType AddCompany(int CompanyID, int Value);
     StatusType AddEmployee(int EmployeeID, int CompanyID, int Salary, int Grade);
