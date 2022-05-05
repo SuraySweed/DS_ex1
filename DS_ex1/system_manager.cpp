@@ -132,13 +132,37 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 		return FAILURE;
 	}
 	//remove from employees trees
+
+	if (!EIN_ptr->left || !EIN_ptr->right) {
+		Node<EmployeeIdData>* tmpID_ptr = EIN_ptr->left ? EIN_ptr->left : EIN_ptr->right;
+		if(tmpID_ptr) {
+			ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.
+				find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
+			EmployeeIdData* tmpEID_ptr = tmpCompany1->getActiveCompanyEmployeesByID().
+				find(tmpCompany1->getActiveCompanyEmployeesByID().getRoot(), *(tmpID_ptr->data))->data;
+			tmpEID_ptr->setEmployeePtrByID(EIN_ptr);
+		}
+	}
 	if (EIN_ptr->left && EIN_ptr->right) {
 		Node<EmployeeIdData>* tmpID_ptr = employeesTreeByID.findMinNodeInSubTree(EIN_ptr);
-		ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
+		ActiveCompaniesData* tmpCompany1 = activeCompaniesTree.
+			find(activeCompaniesTree.getRoot(), tmpID_ptr->data->getEmployerID())->data;
 		EmployeeIdData* tmpEID_ptr = tmpCompany1->getActiveCompanyEmployeesByID().
 			find(tmpCompany1->getActiveCompanyEmployeesByID().getRoot(), *(tmpID_ptr->data))->data;
 		tmpEID_ptr->setEmployeePtrByID(EIN_ptr);
 	}
+	if (!ESN_ptr->left || !ESN_ptr->right) {
+		Node<EmployeeSalaryData>* tmpSalary_ptr = ESN_ptr->left ? ESN_ptr->left : ESN_ptr->right;
+		if (tmpSalary_ptr) {
+			ActiveCompaniesData* tmpCompany2 = activeCompaniesTree.
+				find(activeCompaniesTree.getRoot(), tmpSalary_ptr->data->getEmployerID())->data;
+			EmployeeIdData EID_tmp(tmpSalary_ptr->data->getEmployeeID(), 0, 0, 0);
+			EmployeeIdData* tmpEID_ptr2 = tmpCompany2->getActiveCompanyEmployeesByID().
+				find(tmpCompany2->getActiveCompanyEmployeesByID().getRoot(), EID_tmp)->data;
+			tmpEID_ptr2->setEmploeePtrBySalary(ESN_ptr);
+		}
+	}
+
 	if (ESN_ptr->left && ESN_ptr->right) {
 		Node<EmployeeSalaryData>* tmpSalary_ptr = employeesTreeBySalary.findMinNodeInSubTree(ESN_ptr);
 		ActiveCompaniesData* tmpCompany2 = activeCompaniesTree.find(activeCompaniesTree.getRoot(), tmpSalary_ptr->data->getEmployerID())->data;
