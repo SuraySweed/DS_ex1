@@ -420,25 +420,51 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			EmployeeSalaryData** targetEmployeesSalary = new EmployeeSalaryData * [target_employees_num];
 			int acquirer_employees_num = acquirerACD_ptr->getNumberOfEmployees();
 			EmployeeSalaryData** acquirerEmployeesSalary = new EmployeeSalaryData * [acquirer_employees_num];
+			
 			targetACD_ptr->getActiveCompanyEmployeesBySalary().fillArray(targetEmployeesSalary);
 			acquirerACD_ptr->getActiveCompanyEmployeesBySalary().fillArray(acquirerEmployeesSalary);
 			
 			int total_employees = target_employees_num + acquirer_employees_num;
 			EmployeeSalaryData** targetAndAcquirerEmployees = new EmployeeSalaryData * [total_employees];
+			/*
 			acquirerACD_ptr->getActiveCompanyEmployeesBySalary().mergeTree(targetEmployeesSalary, target_employees_num,
 				acquirerEmployeesSalary, acquirer_employees_num, targetAndAcquirerEmployees);
+			*/
 			acquirerACD_ptr->setNumberOfEmployees(total_employees);
 			acquirerACD_ptr->setHighestSalary(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getMax(
 				acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 
-			EmployeeIdData** targetEmployeesID = new EmployeeIdData * [targetACD_ptr->getNumberOfEmployees()];
-			EmployeeIdData** acquirerEmployeesID = new EmployeeIdData * [acquirerACD_ptr->getNumberOfEmployees()];
+			EmployeeIdData** targetEmployeesID = new EmployeeIdData * [target_employees_num];
+			EmployeeIdData** acquirerEmployeesID = new EmployeeIdData * [acquirer_employees_num];
+			
 			targetACD_ptr->getActiveCompanyEmployeesByID().fillArray(targetEmployeesID);
 			acquirerACD_ptr->getActiveCompanyEmployeesByID().fillArray(acquirerEmployeesID);
+			
 
+			
+			EmployeeIdData** target_fill_array_EID = new EmployeeIdData * [target_employees_num];
+			EmployeeIdData**  acquire_fill_array_EID = new EmployeeIdData * [acquirer_employees_num];
+			EmployeeSalaryData** acquirer_fill_array_ESD = new EmployeeSalaryData * [acquirer_employees_num];
+			EmployeeSalaryData** target_fill_array_ESD = new EmployeeSalaryData * [target_employees_num];
+
+			
+			for (int i = 0; i < target_employees_num; i++) {
+				target_fill_array_ESD[i] = new EmployeeSalaryData(*(targetEmployeesSalary[i]));
+				target_fill_array_EID[i] = new EmployeeIdData(*(targetEmployeesID[i]));
+			}
+
+			for (int i = 0; i < acquirer_employees_num; i++) {
+				acquire_fill_array_EID[i] = new EmployeeIdData(*(acquirerEmployeesID[i]));
+				acquirer_fill_array_ESD[i] = new EmployeeSalaryData(*(acquirerEmployeesSalary[i]));
+			}
+			
 			EmployeeIdData** totalEmployeesID = new EmployeeIdData * [total_employees];
-			acquirerACD_ptr->getActiveCompanyEmployeesByID().mergeTree(targetEmployeesID, target_employees_num,
-				acquirerEmployeesID, acquirer_employees_num, totalEmployeesID);
+			
+			acquirerACD_ptr->getActiveCompanyEmployeesByID().mergeTree(target_fill_array_EID, target_employees_num,
+				acquire_fill_array_EID, acquirer_employees_num, totalEmployeesID);
+
+			acquirerACD_ptr->getActiveCompanyEmployeesBySalary().mergeTree(target_fill_array_ESD, target_employees_num,
+				acquirer_fill_array_ESD, acquirer_employees_num, targetAndAcquirerEmployees);
 
 			activeCompaniesTree.remove(activeCompaniesTree.getRoot(), targetACD_ptr);
 
@@ -466,6 +492,24 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 				delete totalEmployeesID[i];
 			}
 			*/
+
+
+			for (int i = 0; i < target_employees_num; i++) {
+				delete target_fill_array_ESD[i];
+				delete target_fill_array_EID[i]; 
+			}
+
+			for (int i = 0; i < acquirer_employees_num; i++) {
+				delete acquire_fill_array_EID[i];
+				delete acquirer_fill_array_ESD[i];
+			}
+
+			delete[] target_fill_array_ESD;
+			delete[] target_fill_array_EID;
+			delete[] acquire_fill_array_EID;
+			delete[] acquirer_fill_array_ESD;
+
+
 			delete[] targetEmployeesSalary;
 			delete[] acquirerEmployeesSalary;
 			delete[] targetEmployeesID;
