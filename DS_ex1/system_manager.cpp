@@ -235,6 +235,7 @@ StatusType SystemManager::IncreaseCompanyValue(int CompanyID, int ValueIncrease)
 
 	//get the company data and update it
 	CompanyData CD(CompanyID, 0);
+	CompanyData CD(CompanyID, 0);
 	if (!companiesTreeByID.find(companiesTreeByID.getRoot(), CD))
 		return FAILURE;
 
