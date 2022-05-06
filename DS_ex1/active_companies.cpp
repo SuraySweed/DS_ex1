@@ -10,6 +10,21 @@ ActiveCompaniesData::ActiveCompaniesData(const ActiveCompaniesData& active_compa
 	employeesByID(AVLTree<EmployeeIdData>(active_companies_data.employeesByID)), 
 	highestSalary(active_companies_data.highestSalary), numberOfEmployees(active_companies_data.numberOfEmployees) {}
 
+ActiveCompaniesData& ActiveCompaniesData::operator=(ActiveCompaniesData& other)
+{
+	if (this == &other) {
+		return *this;
+	}
+	company_id = other.company_id;
+	employeesBySalary = other.employeesBySalary;
+	employeesByID = other.employeesByID;
+	this->highestSalary = other.highestSalary;
+	numberOfEmployees = other.numberOfEmployees;
+
+	return *this;
+}
+
+
 /*
 ActiveCompaniesData::~ActiveCompaniesData() {}
 */
@@ -28,15 +43,21 @@ bool ActiveCompaniesData::removeEmployee(int employeeID, int salary)
 	if (!employeesByID.find(employeesByID.getRoot(), EID)) return false;
 	EmployeeIdData* EID_ptr = employeesByID.find(employeesByID.getRoot(), EID)->data;
 
-	if (employeesBySalary.remove(employeesBySalary.getRoot(), ESD_ptr) && employeesByID.remove(employeesByID.getRoot(), EID_ptr)) {
-		numberOfEmployees--;
-		if (numberOfEmployees != 0) {
-			setHighestSalary(employeesBySalary.getMax(employeesBySalary.getRoot())->data);
-		}
-		else {
+	if (numberOfEmployees == 1) {
+		if (!(employeesBySalary.remove(employeesBySalary.getRoot(), ESD_ptr)) &&
+			!(employeesByID.remove(employeesByID.getRoot(), EID_ptr))) {
+			numberOfEmployees--;
 			highestSalary = nullptr;
+			return true;
 		}
-		return true;
+	}
+	else {
+		if ((employeesBySalary.remove(employeesBySalary.getRoot(), ESD_ptr)) &&
+			(employeesByID.remove(employeesByID.getRoot(), EID_ptr))) {
+			numberOfEmployees--;
+			setHighestSalary(employeesBySalary.getMax(employeesBySalary.getRoot())->data);
+			return true;
+		}
 	}
 
 	return false;
