@@ -332,79 +332,100 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 		if (ACD_ptr->getActiveCompanyEmployeesByID().find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID))
 			return FAILURE;
 	}
-	// if newCompany is not in the active we insert the company
-	else {
-		if (!activeCompaniesTree.insert(activeCompaniesTree.getRoot(), &ACD)) return FAILURE;
-		ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-	}
 
-	//update the employees big trees
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
-	EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
-	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
-	int oldEmployerID = EID_ptr->getEmployerID();
-	//int* newCompany_ptr = new int(NewCompanyID);
-	EID_ptr->setEmployerID(NewCompanyID);
-	ESD_ptr->setEmployerID(NewCompanyID);
+	StatusType remove_res = RemoveEmployee(EmployeeID);
+	StatusType add_res = AddEmployee(EmployeeID, NewCompanyID, EID_ptr->getSalary(), EID_ptr->getGrade());
 
-	//update employees trees in comapny
-	if (ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID_ptr) &&
-		ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD_ptr)) {
+	return (remove_res == SUCCESS && add_res == SUCCESS) ? SUCCESS : FAILURE;
+	//EmployeeIdData EID(EmployeeID, 0, 0, 0);
+	//CompanyData CD(NewCompanyID, 0);
+	//ActiveCompaniesData ACD(NewCompanyID);
 
-		/*
-		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
-			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
-		ACD_ptr->incNumberOfEmployees();
+	//if (!employeesTreeByID.find(employeesTreeByID.getRoot(), EID) ||
+	//	!companiesTreeByID.find(companiesTreeByID.getRoot(), CD)) {
+	//	return FAILURE;
+	//}
 
-		EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
-		EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
-			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
+	//ActiveCompaniesData* ACD_ptr;
+	//if (activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD) != nullptr) {
+	//	ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	//	if (ACD_ptr->getActiveCompanyEmployeesByID().find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID))
+	//		return FAILURE;
+	//}
+	//// if newCompany is not in the active we insert the company
+	//else {
+	//	if (!activeCompaniesTree.insert(activeCompaniesTree.getRoot(), &ACD)) return FAILURE;
+	//	ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	//}
 
-		EID_active_ptr->setEmployerID(NewCompanyID);
-		ESD_active_ptr->setEmployerID(NewCompanyID);
-		EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
-		ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
-		*/
+	////update the employees big trees
+	//EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	//EmployeeSalaryData ESD(EmployeeID, 0, EID_ptr->getSalary(), 0);
+	//EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
+	//int oldEmployerID = EID_ptr->getEmployerID();
+	////int* newCompany_ptr = new int(NewCompanyID);
+	//EID_ptr->setEmployerID(NewCompanyID);
+	//ESD_ptr->setEmployerID(NewCompanyID);
 
-		//remove the employee from the old company
-		ActiveCompaniesData old_ACD(oldEmployerID);
-		ActiveCompaniesData* old_ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), old_ACD)->data;
-		int salary = EID_ptr->getSalary();
-		old_ACD_ptr->removeEmployee(EmployeeID, salary);
-		if (old_ACD_ptr->getNumberOfEmployees() == 0) {
-			if (!activeCompaniesTree.remove(activeCompaniesTree.getRoot(), old_ACD_ptr)) return FAILURE;
-		}
+	////update employees trees in comapny
+	//if (ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID_ptr) &&
+	//	ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD_ptr)) {
 
-		//ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
-			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
-		ACD_ptr->incNumberOfEmployees();
+	//	/*
+	//	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
+	//		getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
+	//	ACD_ptr->incNumberOfEmployees();
 
-		EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
-		EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
-			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
+	//	EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
+	//		find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
+	//	EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
+	//		find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
 
-		EID_active_ptr->setEmployerID(NewCompanyID);
-		ESD_active_ptr->setEmployerID(NewCompanyID);
-		EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
-		ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
+	//	EID_active_ptr->setEmployerID(NewCompanyID);
+	//	ESD_active_ptr->setEmployerID(NewCompanyID);
+	//	EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
+	//	ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
+	//	*/
 
-		EID_ptr->setEmployerID(NewCompanyID);
-		ESD_ptr->setEmployerID(NewCompanyID);
-		
-		/*EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
-			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
-		EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
-			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
+	//	//remove the employee from the old company
+	//	ActiveCompaniesData old_ACD(oldEmployerID);
+	//	ActiveCompaniesData* old_ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), old_ACD)->data;
+	//	int salary = EID_ptr->getSalary();
+	//	old_ACD_ptr->removeEmployee(EmployeeID, salary);
+	//	if (old_ACD_ptr->getNumberOfEmployees() == 0) {
+	//		if (!activeCompaniesTree.remove(activeCompaniesTree.getRoot(), old_ACD_ptr)) return FAILURE;
+	//	}
 
-		EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
-		ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));*/
+	//	//ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
+	//	ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
+	//		getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
+	//	ACD_ptr->incNumberOfEmployees();
 
-		return SUCCESS;
-	}
-	return FAILURE;
+	//	EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
+	//		find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
+	//	EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
+	//		find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
+
+	//	EID_active_ptr->setEmployerID(NewCompanyID);
+	//	ESD_active_ptr->setEmployerID(NewCompanyID);
+	//	EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
+	//	ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
+
+	//	EID_ptr->setEmployerID(NewCompanyID);
+	//	ESD_ptr->setEmployerID(NewCompanyID);
+	//	
+	//	/*EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
+	//		find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
+	//	EmployeeSalaryData* ESD_active_ptr = ACD_ptr->getActiveCompanyEmployeesBySalary().
+	//		find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
+
+	//	EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
+	//	ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));*/
+
+	//	return SUCCESS;
+	//}
+	//return FAILURE;
 }
 // problem here
 StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Factor)
