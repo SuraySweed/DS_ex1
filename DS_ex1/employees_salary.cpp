@@ -16,7 +16,7 @@ EmployeeSalaryData& EmployeeSalaryData::operator=(EmployeeSalaryData& employee_s
 	employee_id = employee_salary_data.employee_id;
 	salary = employee_salary_data.salary;
 	grade = employee_salary_data.grade;
-	this->employer_id = employee_salary_data.employer_id;
+	employer_id = employee_salary_data.employer_id;
 	employerID_ptr = employee_salary_data.employerID_ptr;
 	
 	return *this;
