@@ -12,7 +12,7 @@ private:
 public:
 	EmployeeSalaryData(int employeeID, int employerID, int salary, int grade);
 	EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData);
-	~EmployeeSalaryData();
+	~EmployeeSalaryData() = default;
 	EmployeeSalaryData& operator=(EmployeeSalaryData&);
 	int& getEmployerID() { return employer_id; }
 	int* getEmployeeIDPtr() { return employerID_ptr; }

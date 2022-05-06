@@ -5,8 +5,6 @@ CompanyData::CompanyData(int companyID, int value) :
 
 CompanyData::CompanyData(const CompanyData& company_data) : company_id(company_data.company_id), value(company_data.value) {}
 
-CompanyData::~CompanyData() {}
-
 CompanyData& CompanyData::operator=(const CompanyData& company_data)
 {
 	if (this == &company_data) {

@@ -9,7 +9,6 @@ class Node {
 public:
 	Node(const T& data_t);
 	Node(T* data) : data(new T(*data)), left(nullptr), right(nullptr) {}
-	//Node(const T& data_t, Node<T>* parent, Node<T>* left, Node<T>* right, int height);
 	Node(const Node<T>& node);
 	Node<T>& operator=(const Node<T>& node);
 	~Node();

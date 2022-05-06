@@ -13,7 +13,7 @@ private:
 public:
 	CompanyData(int companyID, int value);
 	CompanyData(const CompanyData& company_data);
-	~CompanyData();
+	~CompanyData() = default;
 	CompanyData& operator=(const CompanyData&);
 
 	int getCompanyID() { return company_id; }
