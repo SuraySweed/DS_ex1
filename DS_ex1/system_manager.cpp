@@ -278,7 +278,7 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 			ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 		}
 
-		if (employeesTreeByID.insert(employeesTreeByID.getRoot(), &new_EID) ||
+		if (employeesTreeByID.insert(employeesTreeByID.getRoot(), &new_EID) &&
 			employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &new_ESD) &&
 			ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &new_EID) &&
 			ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &new_ESD)) {
