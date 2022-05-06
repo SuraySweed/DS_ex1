@@ -4,7 +4,8 @@
 class EmployeeSalaryData {
 private:
 	int employee_id;
-	int* employer_id;
+	int employer_id;
+	int* employerID_ptr;
 	int salary;
 	int grade;
 
@@ -13,15 +14,16 @@ public:
 	EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData);
 	~EmployeeSalaryData();
 	EmployeeSalaryData& operator=(EmployeeSalaryData&);
-	int* getEmployerID() { return employer_id; }
+	int& getEmployerID() { return employer_id; }
+	int* getEmployeeIDPtr() { return employerID_ptr; }
 	int getSalary() { return salary; }
 	int getGrade() { return grade; }
 	int getEmployeeID() { return employee_id; }
 
 	void setSalary(int newSalary) { salary = newSalary; }
 	void setGrade(int newGrade) { grade = newGrade; }
-	void setEmployerID(int newCompanyID) { *employer_id = newCompanyID; }
-	void setEmployerIDPtr(int* newCompanyID_ptr) { employer_id = newCompanyID_ptr; }
+	void setEmployerID(int newCompanyID) { employer_id = newCompanyID; }
+	void setEmployerIDPtr(int* newCompanyID_ptr) { employerID_ptr = newCompanyID_ptr; }
 
 	bool operator<(const EmployeeSalaryData& other) const;
 	bool operator>(const EmployeeSalaryData& other) const;

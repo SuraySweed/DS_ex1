@@ -334,9 +334,13 @@ template<class T>
 inline Node<T>* AVLTree<T>::copyNodes(Node<T>* root)
 {
 	if (root) {
-		copyNodes(root->left);
-		copyNodes(root->right);
-		return new Node<T>(root->data);
+		//copyNodes(root->left);
+		//copyNodes(root->right);
+		//return new Node<T>(root->data);
+		Node<T>* n = new Node<T>(root->data);
+		n->left = copyNodes(root->left);
+		n->right = copyNodes(root->right);
+		return n;
 	}
 	else {
 		return nullptr;
@@ -356,11 +360,12 @@ inline void AVLTree<T>::deleteTree(Node<T>* root)
 template<class T>
 inline AVLTree<T>& AVLTree<T>::operator=(const AVLTree<T>& root)
 {
-	if (this != &root) {
-		AVLTree temp(root);
-		_root = temp._root;
-		NodesNumber = temp.NodesNumber;
+	if (this == &root) {
+		return *this;
 	}
+	deleteTree(_root);
+	_root = copyNodes(root._root);
+	NodesNumber = root.NodesNumber;
 	return *this;
 }
 
@@ -374,7 +379,7 @@ template<class T>
 inline int AVLTree<T>::getHeight(Node<T>* node)
 {
 	int height = 0;
-	if (node) {
+	if (node ) {
 		int leftHeight = getHeight(node->left);
 		int rightHeight = getHeight(node->right);
 		height = 1 + max(leftHeight, rightHeight);

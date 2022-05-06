@@ -1,19 +1,19 @@
 #include "employees_id.h"
 
 EmployeeIdData::EmployeeIdData(int employeeID, int employerID, int salary, int grade) : 
-	employee_id(employeeID), employer_id(new int(employerID)), salary(salary), grade(grade) {}
+	employee_id(employeeID), employer_id(employerID),employerID_ptr(nullptr), salary(salary), grade(grade) {}
 
 EmployeeIdData::EmployeeIdData(const EmployeeIdData& employeeIdData) :
-	employee_id(employeeIdData.employee_id), employer_id(new int(*(employeeIdData.employer_id))),
-	salary(employeeIdData.salary), grade(employeeIdData.grade) {}
+	employee_id(employeeIdData.employee_id), employer_id(employeeIdData.employer_id),
+	employerID_ptr(employeeIdData.employerID_ptr), salary(employeeIdData.salary), grade(employeeIdData.grade) {}
 
-EmployeeIdData::~EmployeeIdData()// = default;
-{
+EmployeeIdData::~EmployeeIdData() = default;
+/*{
 	if (employer_id) {
 		delete employer_id;
 	}
 	employer_id = nullptr;
-}
+}*/
 
 EmployeeIdData& EmployeeIdData::operator=(EmployeeIdData& employee_id_data)
 {
@@ -25,6 +25,7 @@ EmployeeIdData& EmployeeIdData::operator=(EmployeeIdData& employee_id_data)
 	grade = employee_id_data.grade;
 	//delete this->employer_id;
 	(this->employer_id) = (employee_id_data.employer_id);
+	employerID_ptr = employee_id_data.employerID_ptr;
 	//employee_id_data.employer_id = nullptr;
 
 	return *this;
