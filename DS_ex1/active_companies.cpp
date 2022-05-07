@@ -51,7 +51,7 @@ bool ActiveCompaniesData::removeEmployee(int employeeID, int salary)
 		if ((employeesBySalary.remove(employeesBySalary.getRoot(), ESD_ptr)) &&
 			(employeesByID.remove(employeesByID.getRoot(), EID_ptr))) {
 			numberOfEmployees--;
-			setHighestSalary(employeesBySalary.getMax(employeesBySalary.getRoot())->data);
+			setHighestSalary((employeesBySalary.getMax(employeesBySalary.getRoot()))->data);
 			return true;
 		}
 	}

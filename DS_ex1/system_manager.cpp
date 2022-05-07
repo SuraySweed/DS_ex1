@@ -131,7 +131,8 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
 	EmployeeSalaryData ESD(EmployeeID, nullptr, EID_ptr->getSalary(), 0);
 	EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
-	ActiveCompaniesData ACD(EID_ptr->getEmployerIDInteger());
+	int employerID = EID_ptr->getEmployerIDInteger();
+	ActiveCompaniesData ACD(employerID);
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 	int salary = ESD_ptr->getSalary();
 
@@ -157,6 +158,7 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	}
 
 	else {
+		ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	}
