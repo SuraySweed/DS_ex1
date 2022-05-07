@@ -1,8 +1,11 @@
 #include "employees_salary.h"
 
-EmployeeSalaryData::EmployeeSalaryData(int employeeID, int employerID, int salary, int grade) :	
-	employee_id(employeeID), employer_id(employerID), employerID_ptr(nullptr), salary(salary), grade(grade) {}
+using std::move;
 
+EmployeeSalaryData::EmployeeSalaryData(int employeeID, shared_ptr<int> employerID, int salary, int grade) :
+	employee_id(employeeID), employer_id(move(employerID)), salary(salary), grade(grade) {}
+
+/*
 EmployeeSalaryData::EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData) :
 	employee_id(EmployeeSalaryData.employee_id), employer_id(EmployeeSalaryData.employer_id),
 	employerID_ptr(EmployeeSalaryData.employerID_ptr), salary(EmployeeSalaryData.salary), grade(EmployeeSalaryData.grade) {}
@@ -21,7 +24,7 @@ EmployeeSalaryData& EmployeeSalaryData::operator=(EmployeeSalaryData& employee_s
 	
 	return *this;
 }
-
+*/
 bool EmployeeSalaryData::operator<(const EmployeeSalaryData& other) const
 {
 	if (this->salary < other.salary) {
