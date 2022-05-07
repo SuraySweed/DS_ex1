@@ -18,6 +18,8 @@ public:
 	EmployeeIdData(const EmployeeIdData& employeeIdData);
 	~EmployeeIdData() = default;
 	EmployeeIdData& operator=(EmployeeIdData&);
+	int getEmployeeID() { return employee_id; }
+	int getEmployerIDInteger() { return employer_id; }
 	int& getEmployerID() { return employer_id; }
 	int* getEmployerIDPtr() { return employerID_ptr; }
 	int getSalary() { return salary; }
