@@ -27,7 +27,7 @@ public:
 
 	void setSalary(int newSalary) { salary = newSalary; }
 	void setGrade(int newGrade) { grade = newGrade; }
-	//void setEmployerID(int newCompanyID) { employer_id = newCompanyID; }
+	void setEmployerID(int newCompanyID) { *employer_id = newCompanyID; }
 	//void setEmployerIDPtr(int* newCompanyID_ptr) { employerID_ptr = newCompanyID_ptr; }
 
 	bool operator<(const EmployeeSalaryData& other) const;

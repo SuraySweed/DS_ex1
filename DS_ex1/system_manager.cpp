@@ -5,13 +5,13 @@ using std::shared_ptr;
 using std::make_shared;
 using std::move;
 
-/*
+
 void SystemManager::updateEmployerIDByIDInCompany(Node<EmployeeIdData>* root, int companyID)
 {
 	if (!root) return;
 
 	updateEmployerIDByIDInCompany(root->left, companyID);
-	*(root->data.)
+	root->data->setEmployerID(companyID);
 	//root->data->setEmployerID(companyID);
 	//*(root->data->getEmployerIDPtr()) = companyID;
 	updateEmployerIDByIDInCompany(root->right, companyID);
@@ -23,10 +23,11 @@ void SystemManager::updateEmployerIDBySalaryInCompany(Node<EmployeeSalaryData>* 
 
 	updateEmployerIDBySalaryInCompany(root->left, companyID);
 	root->data->setEmployerID(companyID);
-	*(root->data->getEmployeeIDPtr()) = companyID;
+	//root->data->setEmployerID(companyID);
+	//*(root->data->getEmployeeIDPtr()) = companyID;
 	updateEmployerIDBySalaryInCompany(root->right, companyID);
 }
-*/
+
 
 SystemManager::SystemManager() : employeesTreeByID(AVLTree<EmployeeIdData>()),
 	employeesTreeBySalary(AVLTree<EmployeeSalaryData>()), companiesTreeByID(AVLTree<CompanyData>()), 
@@ -70,9 +71,11 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 
 	//int* companyID_ptr = new int(CompanyID);
 
-	EmployeeIdData EID(EmployeeID, CompanyID, Salary, Grade);
+	shared_ptr<int> company_id = make_shared<int>();
+	*company_id = CompanyID;
+	EmployeeIdData EID(EmployeeID, company_id, Salary, Grade);
 	CompanyData CD(CompanyID, 0); 
-	EmployeeSalaryData ESD(EmployeeID, CompanyID, Salary, Grade);
+	EmployeeSalaryData ESD(EmployeeID, company_id, Salary, Grade);
 
 	// if employee is existed in the id and salary trees
 	if (employeesTreeByID.find(employeesTreeByID.getRoot(), EID) ||
@@ -88,14 +91,14 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 			return FAILURE;
 		}
 	}
-
+	
 	ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 	if (employeesTreeByID.insert(employeesTreeByID.getRoot(), &EID) &&
 		employeesTreeBySalary.insert(employeesTreeBySalary.getRoot(), &ESD) &&
 		ACD_ptr->getActiveCompanyEmployeesByID().insert(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), &EID) &&
 		ACD_ptr->getActiveCompanyEmployeesBySalary().insert(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), &ESD)) {
 				
-		EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+		/*EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
 		EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), ESD)->data;
 		EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
 			find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), EID)->data;
@@ -103,7 +106,7 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 			find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), ESD)->data;
 
 		EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
-		ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
+		ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));*/
 
 		numberOfEmployees++;
 		ACD_ptr->incNumberOfEmployees(); //for specific company
@@ -380,8 +383,10 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 	
 	if (RemoveEmployee(EmployeeID) == SUCCESS) {
 		//int* employerID_ptr = new int(employerID);
-		EmployeeIdData new_EID(EmployeeID, employerID, new_salary, grade);
-		EmployeeSalaryData new_ESD(EmployeeID, employerID, new_salary, grade);
+		shared_ptr<int> company_id = make_shared<int>();
+		*company_id = employerID;
+		EmployeeIdData new_EID(EmployeeID, company_id, new_salary, grade);
+		EmployeeSalaryData new_ESD(EmployeeID, company_id, new_salary, grade);
 		//ActiveCompaniesData ACD(employerID);
 		//ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 
@@ -404,7 +409,7 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 			ACD_ptr->incNumberOfEmployees();
 
 
-			EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), new_EID)->data;
+			/*EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), new_EID)->data;
 			EmployeeSalaryData* ESD_ptr = employeesTreeBySalary.find(employeesTreeBySalary.getRoot(), new_ESD)->data;
 			EmployeeIdData* EID_active_ptr = ACD_ptr->getActiveCompanyEmployeesByID().
 				find(ACD_ptr->getActiveCompanyEmployeesByID().getRoot(), new_EID)->data;
@@ -412,7 +417,7 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 				find(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), new_ESD)->data;
 
 			EID_active_ptr->setEmployerIDPtr(&(EID_ptr->getEmployerID()));
-			ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));
+			ESD_active_ptr->setEmployerIDPtr(&(ESD_ptr->getEmployerID()));*/
 
 			return SUCCESS;
 		}
