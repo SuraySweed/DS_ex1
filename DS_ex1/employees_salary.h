@@ -14,6 +14,7 @@ public:
 	EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData);
 	~EmployeeSalaryData() = default;
 	EmployeeSalaryData& operator=(EmployeeSalaryData&);
+	int getEmployerIDInteger() { return employer_id; }
 	int& getEmployerID() { return employer_id; }
 	int* getEmployeeIDPtr() { return employerID_ptr; }
 	int getSalary() { return salary; }
