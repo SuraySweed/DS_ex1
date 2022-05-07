@@ -134,7 +134,7 @@ StatusType SystemManager::RemoveCompany(int CompanyID)
 		activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		return FAILURE;
 	}
-	companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD);
+	if (!companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD)) return FAILURE;
 	numberOfCompanies--;
 
 	return SUCCESS;
@@ -448,8 +448,10 @@ StatusType SystemManager::HireEmployee(int EmployeeID, int NewCompanyID)
 	}
 
 	EmployeeIdData* EID_ptr = employeesTreeByID.find(employeesTreeByID.getRoot(), EID)->data;
+	int salary = EID_ptr->getSalary();
+	int grade = EID_ptr->getGrade();
 	StatusType remove_res = RemoveEmployee(EmployeeID);
-	StatusType add_res = AddEmployee(EmployeeID, NewCompanyID, EID_ptr->getSalary(), EID_ptr->getGrade());
+	StatusType add_res = AddEmployee(EmployeeID, NewCompanyID, salary, grade);
 
 	return (remove_res == SUCCESS && add_res == SUCCESS) ? SUCCESS : FAILURE;
 	//EmployeeIdData EID(EmployeeID, 0, 0, 0);
