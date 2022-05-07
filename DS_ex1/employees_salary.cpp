@@ -2,8 +2,8 @@
 
 using std::move;
 
-EmployeeSalaryData::EmployeeSalaryData(int employeeID, shared_ptr<int> employerID, int salary, int grade) :
-	employee_id(employeeID), employer_id(move(employerID)), salary(salary), grade(grade) {}
+EmployeeSalaryData::EmployeeSalaryData(int employeeID, std::shared_ptr<int> employerID, int salary, int grade) :
+	employee_id(employeeID), employer_id(std::move(employerID)), salary(salary), grade(grade) {}
 
 /*
 EmployeeSalaryData::EmployeeSalaryData(const EmployeeSalaryData& EmployeeSalaryData) :

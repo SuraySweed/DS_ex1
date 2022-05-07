@@ -1,6 +1,8 @@
 #ifndef SYSTEM_MANAGER_H_
 #define SYSTEM_MANAGER_H_
 
+#include <utility>
+#include <memory>
 #include "avl_tree.h"
 #include "employees_id.h"
 #include "employees_salary.h"

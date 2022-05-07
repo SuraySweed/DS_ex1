@@ -1,9 +1,8 @@
 #include "employees_id.h"
 
-using std::move;
 
-EmployeeIdData::EmployeeIdData(int employeeID, shared_ptr<int> employerID, int salary, int grade) : 
-	employee_id(employeeID), employer_id(move(employerID)), salary(salary), grade(grade) {}
+EmployeeIdData::EmployeeIdData(int employeeID, std::shared_ptr<int> employerID, int salary, int grade) : 
+	employee_id(employeeID), employer_id(std::move(employerID)), salary(salary), grade(grade) {}
 
 /*
 EmployeeIdData::EmployeeIdData(const EmployeeIdData& employeeIdData) :

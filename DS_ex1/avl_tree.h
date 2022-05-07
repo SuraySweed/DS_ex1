@@ -28,8 +28,6 @@ private:
 	Node<T>* rightRotate(Node<T>* root);
 	Node<T>* leftRotate(Node<T>* root);
 	Node<T>* balanceTree(Node<T>* root);
-	//Node<T>* auxInsert(Node<T>* root, Node<T>* newNode);
-	//void auxRemove(Node<T>* root, Node<T>* node);
 	void auxInorder(Node<T>* root, int& k, T** arr, int& i);
 	void inorderArray(Node<T>* root, T** arr, int& i);
 	void MaxToMinInArray(Node<T>* root, T** arr, int& i);
@@ -57,12 +55,10 @@ public:
 	void fillArrayMaxToMinInTree(T* arr[]);
 	int getNodesNumberBetweenMinMax(Node<T>* root, T* min, T* max);
 	void InorderMinMax(T* arr[], T* min, T* max);
-	//bool remove(const T& data);
 	Node<T>* remove(Node<T>* root, T* data);
 	Node<T>* getMax(Node<T>* root);
 	int getNodesNumber();
 	Node<T>* findMinNodeInSubTree(Node<T>* subTreeRoot);
-	//T* inorder(Node<T>* root, int num, T* arr[]);
 };
 
 
@@ -70,10 +66,6 @@ public:
 template<class T>
 inline Node<T>::Node(const T& data_t) : data(new T(data_t)), left(nullptr), right(nullptr) {}
 
-/*
-template<class T>
-inline Node<T>::Node(const T& data_t, Node<T>* parent, Node<T>* left, Node<T>* right, int height){}
-*/
 
 template<class T>
 inline Node<T>::Node(const Node<T>& node)
@@ -264,13 +256,9 @@ inline void AVLTree<T>::InorderMinMaxAux(Node<T>* root, T** arr, int& i, T* min,
 		InorderMinMaxAux(root->right, arr, i, min, max);
 	}
 	else if (*(root->data) < *min) {
-		arr[i] = (root->data);
-		i++;
 		InorderMinMaxAux(root->right, arr, i, min, max);
 	}
 	else {
-		arr[i] = (root->data);
-		i++;
 		InorderMinMaxAux(root->left, arr, i, min, max);
 	}
 }
@@ -333,9 +321,6 @@ template<class T>
 inline Node<T>* AVLTree<T>::copyNodes(Node<T>* root)
 {
 	if (root) {
-		//copyNodes(root->left);
-		//copyNodes(root->right);
-		//return new Node<T>(root->data);
 		Node<T>* n = new Node<T>(root->data);
 		n->left = copyNodes(root->left);
 		n->right = copyNodes(root->right);

@@ -24,10 +24,6 @@ ActiveCompaniesData& ActiveCompaniesData::operator=(ActiveCompaniesData& other)
 	return *this;
 }
 
-
-/*
-ActiveCompaniesData::~ActiveCompaniesData() {}
-*/
 void ActiveCompaniesData::setHighestSalary(EmployeeSalaryData* highest_salary)
 {
 	highestSalary = highest_salary;
