@@ -317,7 +317,7 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 		return INVALID_INPUT;
 	
 	//updates in companyTreeByID
-	CompanyData acquirerCD(AcquirerID,0);	
+	CompanyData acquirerCD(AcquirerID, 0);	
 	CompanyData targetCD(TargetID, 0);
 	if (!companiesTreeByID.find(companiesTreeByID.getRoot(), acquirerCD) ||
 		!companiesTreeByID.find(companiesTreeByID.getRoot(), targetCD))	{
@@ -340,21 +340,19 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 		return FAILURE;
 	}
 	numberOfCompanies--;
-	acquirerCD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), acquirerCD)->data;
-	acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
 
 	//updates at active companies tree
 	ActiveCompaniesData targetACD(TargetID);
 	ActiveCompaniesData acquirerACD(AcquirerID);
 
 	// if target company is active, else we do nothing
+	acquirerCD_ptr = companiesTreeByID.find(companiesTreeByID.getRoot(), acquirerCD)->data;
 	if (activeCompaniesTree.find(activeCompaniesTree.getRoot(), targetACD)) {
 		
 		ActiveCompaniesData* targetACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), targetACD)->data;
 
 		if (!activeCompaniesTree.find(activeCompaniesTree.getRoot(), acquirerACD)) {
 			if (!activeCompaniesTree.insert(activeCompaniesTree.getRoot(), &acquirerACD)) return FAILURE;
-			if (!activeCompaniesTree.remove(activeCompaniesTree.getRoot(), targetACD_ptr)) return FAILURE;
 
 			ActiveCompaniesData* acquirerACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), acquirerACD)->data;
 			acquirerACD_ptr->setActiveCompanyEmployeesByID(targetACD_ptr->getActiveCompanyEmployeesByID());
@@ -365,6 +363,8 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			updateEmployerIDByIDInCompany(acquirerACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
 			updateEmployerIDBySalaryInCompany(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
 			acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
+
+			if (!activeCompaniesTree.remove(activeCompaniesTree.getRoot(), targetACD_ptr)) return FAILURE;
 		}
 		// merge two companies(target and acqure), and remove the target company
 		else {
@@ -423,7 +423,6 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			updateEmployerIDBySalaryInCompany(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
 			acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
 			
-
 			for (int i = 0; i < target_employees_num; i++) {
 				delete target_fill_array_ESD[i];
 				delete target_fill_array_EID[i]; 
@@ -447,13 +446,14 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			delete[] totalEmployeesID;
 		}
 	}
+	acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
 	return SUCCESS;
 }
 
 StatusType SystemManager::GetHighestEarner(int CompanyID, int* EmployeeID)
 {
 	if (EmployeeID == nullptr || CompanyID == 0)
-		return FAILURE;
+		return INVALID_INPUT;
 
 	if (CompanyID < 0) {
 		if (numberOfEmployees == 0) {

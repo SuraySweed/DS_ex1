@@ -12,9 +12,9 @@ private:
 
 public:
 	CompanyData(int companyID, int value);
-	CompanyData(const CompanyData& company_data);
+	CompanyData(const CompanyData& company_data) = default;
 	~CompanyData() = default;
-	CompanyData& operator=(const CompanyData&);
+	CompanyData& operator=(const CompanyData&) = default;
 
 	int getCompanyID() { return company_id; }
 	int getValue() { return value; }
