@@ -599,7 +599,7 @@ StatusType SystemManager::GetNumEmployeesMatching(int CompanyID, int MinEmployee
 
 		*NumOfEmployees = 0;
 		for (int i = 0; i < *TotalNumOfEmployees; i++) {
-			if ((employeesID_arr[i]->getSalary() > MinSalary) && (employeesID_arr[i]->getGrade() > MinGrade)) {
+			if ((employeesID_arr[i]->getSalary() >= MinSalary) && (employeesID_arr[i]->getGrade() >= MinGrade)) {
 				(*NumOfEmployees)++;
 			}
 		}
