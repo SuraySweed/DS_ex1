@@ -18,15 +18,8 @@ ActiveCompaniesData& ActiveCompaniesData::operator=(ActiveCompaniesData& other)
 	company_id = other.company_id;
 	employeesBySalary = other.employeesBySalary;
 	employeesByID = other.employeesByID;
-	//this->highestSalary = other.highestSalary;
+	this->highestSalary = other.highestSalary;
 	numberOfEmployees = other.numberOfEmployees;
-	if (this->employeesBySalary.getRoot()) {
-		this->highestSalary = this->employeesBySalary.getMax(this->employeesBySalary.getRoot())->data->getEmployeeID();
-	}
-	else {
-		this->highestSalary = 0;
-	}
-
 
 	return *this;
 }

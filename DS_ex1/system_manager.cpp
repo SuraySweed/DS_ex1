@@ -142,27 +142,26 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	}
 
 	// remove from the big trees
-	if (!employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr) ||
-		!employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr)) {
-		return FAILURE;
-	}
-
+	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
+	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
+		
 	//check if the company has no employees
+	
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
-		ActiveCompaniesData* newRootData = activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr)->data;
-		if (!newRootData) {
-			return FAILURE;
-		}
-		newRootData->setHighestSalary(newRootData->getActiveCompanyEmployeesBySalary().
+		Node<ActiveCompaniesData>* newNode = activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
+		ActiveCompaniesData* newRootData = newNode ? newNode->data : nullptr;
+		if (newRootData) {
+			newRootData->setHighestSalary(newRootData->getActiveCompanyEmployeesBySalary().
 			getMax(newRootData->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+		}	
 	}
 
 	else {
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
 	}
-
-	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
+	
+	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot()) ? employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data : nullptr;
 	numberOfEmployees--;
 
 	return SUCCESS;
