@@ -158,7 +158,6 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	}
 
 	else {
-		ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
 			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	}
