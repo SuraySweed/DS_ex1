@@ -111,7 +111,7 @@ StatusType SystemManager::RemoveCompany(int CompanyID)
 		activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		return FAILURE;
 	}
-	if (!companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD)) return FAILURE;
+	companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD);
 	numberOfCompanies--;
 
 	return SUCCESS;
