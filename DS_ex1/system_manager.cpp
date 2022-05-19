@@ -90,7 +90,7 @@ StatusType SystemManager::AddEmployee(int EmployeeID, int CompanyID, int Salary,
 		highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 		
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
-			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	
 		return SUCCESS;
 	}
@@ -111,7 +111,7 @@ StatusType SystemManager::RemoveCompany(int CompanyID)
 		activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)) {
 		return FAILURE;
 	}
-	if (!companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD)) return FAILURE;
+	companiesTreeByID.remove(companiesTreeByID.getRoot(), &CD);
 	numberOfCompanies--;
 
 	return SUCCESS;
@@ -144,23 +144,24 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	// remove from the big trees
 	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
 	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
-		
+
+
+
 	//check if the company has no employees
-	
 	if (ACD_ptr->getNumberOfEmployees() == 0) {
 		Node<ActiveCompaniesData>* newNode = activeCompaniesTree.remove(activeCompaniesTree.getRoot(), ACD_ptr);
 		ActiveCompaniesData* newRootData = newNode ? newNode->data : nullptr;
 		if (newRootData) {
-			newRootData->setHighestSalary(newRootData->getActiveCompanyEmployeesBySalary().
-			getMax(newRootData->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
-		}	
+			
+		newRootData->setHighestSalary(newRootData->getActiveCompanyEmployeesBySalary().
+			getMax(newRootData->getActiveCompanyEmployeesBySalary().getRoot())->data);	}	
 	}
 
 	else {
 		ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
-			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+			getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 	}
-	
+
 	highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot()) ? employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data : nullptr;
 	numberOfEmployees--;
 
@@ -270,7 +271,7 @@ StatusType SystemManager::PromoteEmployee(int EmployeeID, int SalaryIncrease, in
 
 			numberOfEmployees++;
 			ACD_ptr->setHighestSalary(ACD_ptr->getActiveCompanyEmployeesBySalary().
-				getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+				getMax(ACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 			highestSalaryAll = employeesTreeBySalary.getMax(employeesTreeBySalary.getRoot())->data;
 			ACD_ptr->incNumberOfEmployees();
 
@@ -359,7 +360,7 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			acquirerACD_ptr->setActiveCompanyEmployeesBySalary(targetACD_ptr->getActiveCompanyEmployeesBySalary());
 			acquirerACD_ptr->setNumberOfEmployees(targetACD_ptr->getNumberOfEmployees());
 			acquirerACD_ptr->setHighestSalary(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getMax
-			(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+			(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 			updateEmployerIDByIDInCompany(acquirerACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
 			updateEmployerIDBySalaryInCompany(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
 			acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
@@ -418,7 +419,7 @@ StatusType SystemManager::AcquireCompany(int AcquirerID, int TargetID, double Fa
 			acquirerACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), acquirerACD)->data;
 			acquirerACD_ptr->setNumberOfEmployees(total_employees);
 			acquirerACD_ptr->setHighestSalary(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getMax(
-				acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data->getEmployeeID());
+				acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot())->data);
 			updateEmployerIDByIDInCompany(acquirerACD_ptr->getActiveCompanyEmployeesByID().getRoot(), AcquirerID);
 			updateEmployerIDBySalaryInCompany(acquirerACD_ptr->getActiveCompanyEmployeesBySalary().getRoot(), AcquirerID);
 			acquirerCD_ptr->setValue(int(double((acquirerValue + targetValue) * Factor)));
@@ -466,7 +467,7 @@ StatusType SystemManager::GetHighestEarner(int CompanyID, int* EmployeeID)
 		if (!activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD))
 			return FAILURE;
 		ActiveCompaniesData* ACD_ptr = activeCompaniesTree.find(activeCompaniesTree.getRoot(), ACD)->data;
-		*EmployeeID = ACD_ptr->getHighestSalary();
+		*EmployeeID = ACD_ptr->getHighestSalary()->getEmployeeID();
 	}
 
 	return SUCCESS;
@@ -540,7 +541,7 @@ StatusType SystemManager::GetHighestEarnerInEachCompany(int NumOfCompanies, int*
 
 	activeCompaniesTree.inorderK(activeCompaniesTree.getRoot(), NumOfCompanies, companiesArray);
 	for (int i = 0; i < NumOfCompanies; i++) {
-		(*Employees)[i] = companiesArray[i]->getHighestSalary();
+		(*Employees)[i] = companiesArray[i]->getHighestSalary()->getEmployeeID();
 	}
 
 	delete[] companiesArray;
@@ -599,7 +600,7 @@ StatusType SystemManager::GetNumEmployeesMatching(int CompanyID, int MinEmployee
 
 		*NumOfEmployees = 0;
 		for (int i = 0; i < *TotalNumOfEmployees; i++) {
-			if ((employeesID_arr[i]->getSalary() > MinSalary) && (employeesID_arr[i]->getGrade() > MinGrade)) {
+			if ((employeesID_arr[i]->getSalary() >= MinSalary) && (employeesID_arr[i]->getGrade() >= MinGrade)) {
 				(*NumOfEmployees)++;
 			}
 		}

@@ -10,7 +10,7 @@ private:
 	int company_id;
 	AVLTree<EmployeeSalaryData> employeesBySalary; //by salary
 	AVLTree<EmployeeIdData> employeesByID;    // by id
-	int highestSalary;
+	EmployeeSalaryData* highestSalary;
 	int numberOfEmployees;
 
 public:
@@ -21,8 +21,8 @@ public:
 
 	AVLTree<EmployeeIdData>& getActiveCompanyEmployeesByID() { return employeesByID; }
 	AVLTree<EmployeeSalaryData>& getActiveCompanyEmployeesBySalary() { return employeesBySalary; }
-	int getHighestSalary() { return highestSalary; }
-	void setHighestSalary(int highest_salary);
+	EmployeeSalaryData* getHighestSalary() { return highestSalary; }
+	void setHighestSalary(EmployeeSalaryData* highest_salary);
 	int getNumberOfEmployees() { return numberOfEmployees; }
 	void incNumberOfEmployees() { numberOfEmployees++; }
 	bool removeEmployee(int employeeID, int salary);
