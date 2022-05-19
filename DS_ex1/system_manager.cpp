@@ -142,8 +142,10 @@ StatusType SystemManager::RemoveEmployee(int EmployeeID)
 	}
 
 	// remove from the big trees
-	employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr);
-	employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr);
+	if ((!employeesTreeByID.remove(employeesTreeByID.getRoot(), EID_ptr) ||
+		!employeesTreeBySalary.remove(employeesTreeBySalary.getRoot(), ESD_ptr)) && numberOfEmployees) {
+		return FAILURE;
+	}
 		
 	//check if the company has no employees
 	
